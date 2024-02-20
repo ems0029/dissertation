@@ -1,0 +1,16 @@
+truck,caseId,otherId,spacing,GroupCount,numel_runIter,numel_GroupCount,numel_numel_time,numel_numel_lat,numel_numel_lon,numel_numel_alt,numel_numel_course,numel_numel_gps_week,numel_numel_gps_seconds,numel_numel_v,numel_numel_engine_pct_torque,numel_numel_engine_rpm,numel_numel_brake_by_driver,numel_numel_brakes_on,numel_numel_brake_pedal_position,numel_numel_desired_ctrl_brake_rate,numel_numel_retarder_pct_torque,numel_numel_fuel_rate,numel_numel_gear_number,numel_numel_fan_state,numel_numel_grade_estimate,numel_numel_range_estimate,numel_numel_drtk_v2v_dist,numel_numel_ID,numel_numel_runID,numel_numel_gps_week_NRC,numel_numel_gps_seconds_NRC,numel_numel_caseId_NRC,numel_numel_truck_NRC,numel_numel_runIter_NRC,numel_numel_ambTemp_NRC,numel_numel_ambPressure_NRC,numel_numel_windSpeed_WS_NRC,numel_numel_windDir_WS_NRC,numel_numel_windSpeed_veh_NRC,numel_numel_windDir_veh_NRC,numel_numel_v_gps_NRC,numel_numel_v_NRC,numel_numel_engine_pct_tq_NRC,numel_numel_engine_speed_NRC,numel_numel_engine_fuel_rate_NRC,numel_numel_track_straight_NRC,numel_numel_track_north_NRC
+A1,AL,NA,150,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+A1,AL,NA,258,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
+A1,AL,NA,30,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
+A1,AL,NA,40,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4
+A1,AL,NA,50,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
+A1,AL,NA,75,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
+A1,RF,NA,NA,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6
+A2,AL,NA,150,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+A2,AL,NA,258,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
+A2,AL,NA,30,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
+A2,AL,NA,40,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4
+A2,AL,NA,50,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
+A2,AL,NA,75,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
+A2,RF,NA,NA,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7
+A2,OT,CI,75,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
