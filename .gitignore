@@ -32,6 +32,17 @@ octave-workspace
 
 # pictures/images
 *.png
-
-# avoid matfiles for now
-*.mat
+ipg_grade_sim/processed/tbl_platoon_wDrr_working.mat
+ipg_grade_sim/processed/archive/tbl_12_12_23.mat
+ipg_grade_sim/processed/archive/tbl_baseline_12_13_23.mat
+ipg_grade_sim/processed/tbl_baseline_working.mat
+ipg_grade_sim/processed/tbl_leader_only.mat
+mass_estimate/canada_table_12_4_23.mat
+mass_estimate/jdsmc_table_11_19_23.mat
+validation_analysis/lookups/tbl_canada_2_15_2024.mat
+validation_analysis/lookups/tbl_doeTestTrack_2_14_2024.mat
+validation_analysis/lookups/tbl_ew_11_22.mat
+validation_analysis/lookups/tbl_I85_2_14_2024.mat
+validation_analysis/lookups/tbl_I85_2_8_2024.mat
+validation_analysis/lookups/tbl_jdsmc_2_15_2024.mat
+ipg_grade_sim/processed/tbl_platoon_working.mat
