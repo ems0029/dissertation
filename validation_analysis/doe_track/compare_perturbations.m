@@ -48,8 +48,12 @@ end
 % label{kappa*X.brake_term>12}
 % 
 
+% hold on
+% scatter3(gca(),kappa*X.brake_term,kappa*X.drag_term,X.fuel_true,'filled','MarkerFaceAlpha',0.25)
+% xlabel('Inferred effect of braking [L/hr]')
+% ylabel('Inferred effect of drag reduction [L/hr]')
+% zlabel('Actual fuel difference [L/hr]')
 hold on
-scatter3(gca(),kappa*X.brake_term,kappa*X.drag_term,X.fuel_true,'filled','MarkerFaceAlpha',0.25)
-xlabel('Inferred effect of braking [L/hr]')
-ylabel('Inferred effect of drag reduction [L/hr]')
-zlabel('Actual fuel difference [L/hr]')
+scatter(gca(),X.fuel_inf,X.fuel_true,'filled','MarkerFaceAlpha',0.25)
+xlabel('Inferred fuel difference [L/hr]')
+ylabel('Actual fuel difference [L/hr]')
