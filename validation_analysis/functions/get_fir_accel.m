@@ -1,5 +1,9 @@
-function fir_accel = get_fir_accel(subtbl)
-redesign = false;
+function fir_accel = get_fir_accel(subtbl,redesign)
+narginchk(1,2)
+if ~exist('redesign','var')
+    redesign = false;
+end
+
 if redesign
     order=27;
     tic
@@ -7,7 +11,7 @@ if redesign
         'CutoffFrequency',1.2,'SampleRate',10);
     toc
 else
-    load('..\lookups\firf_27_1pt2Hz.mat','firf')
+    load('F:\dissertation\validation_analysis\lookups\firf_27_1pt2Hz.mat','firf')
     order = 27;
 end
 a_num=diff(subtbl.v)*10; % 0.5 samples late

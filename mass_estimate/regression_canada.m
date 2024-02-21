@@ -7,17 +7,19 @@ addpath ..\validation_analysis\lookups\truck_params\
 path='F:\PatrickSmith\Canada_Fuel_Test\OT\A2\OT-CI-S75-1_2019-06-27-17-18-20.mat';
 param_path = "..\validation_analysis\lookups\truck_params\A2_canada.mat";
 tbl = flat_auburn_data(path);
-tbl.leading = false(height(tbl),1);
+tbl.numTrucks = repmat("AL",height(tbl),1);
+tbl.truck = repmat("A2",height(tbl),1);
+
 tbl = add_features(tbl,param_path,[1400:30000]);
-robust_opt = 'andrews';
+robust_opt = 'ols';
 title_str = "A2";
 load(param_path)
+kappa = 3600/0.43/36e6; %3600 s/hr,fuel conversion efficiency,LHV in J/L
 
 tbl = tbl;
 tbl = tbl(:,6:end);
-tbl = tbl(~tbl.decel_on,:);
+tbl = tbl(tbl.P_AD==0,:);
 tbl.range_estimate_drtk = [];
-tbl.leading = [];
 tbl.decel_on= []    ;
 tbl.coasting_on= []  ;
 tbl.fan_on = [];
@@ -30,8 +32,8 @@ tbl.gear_number= [];
 
     tbl=fillmissing(tbl,'nearest');
 %     tbl=rmoutliers(tbl);
-X = smoothdata(tbl.a_estimate)*1.04+9.8*(sind(tbl.grade_estimate));
-y = 1.34*tbl.engine_power./tbl.v- tbl.v.^2*truck.c_d.*tbl.drag_reduction_ratio.*truck.front_area*1.177*0.5;
+X = (tbl.a_estimate)*1.04+9.8*(sind(tbl.grade_estimate));
+y = 1/kappa*tbl.fuel_rate./tbl.v- tbl.v.^2*truck.c_d.*tbl.drag_reduction_ratio.*truck.front_area*1.225*0.5;
 
 mdl=fitlm(X,y,'y~x1','RobustOpts',robust_opt);
 hold on

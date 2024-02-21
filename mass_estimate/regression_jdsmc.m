@@ -1,9 +1,13 @@
 clearvars
-close all
-load('jdsmc_table_11_19_23.mat')
+% close all
+load('..\validation_analysis\lookups\tbl_jdsmc_2_15_2024.mat')
+tbl_wfeat = convertvars(tbl_wfeat,'imputed','double');
+
+kappa = 3600/0.366/36e6; %3600 s/hr,fuel conversion efficiency,LHV in J/L
+power_or_fuel = 'fuel';
 
 str=["RF","T13","T14"];
-robust_opt = 'ols';
+robust_opt = 'fair';
 for q=1:3
 
     switch str(q)
@@ -38,8 +42,12 @@ for q=1:3
     RF=fillmissing(RF,'nearest');
     RF=rmoutliers(RF);
     X = RF.a_estimate*1.04+9.8*(sind(RF.grade_estimate));
-    y = 1.34*RF.engine_power./RF.v- RF.v.^2*truck.c_d*truck.front_area*1.177*0.5;
-
+    switch power_or_fuel
+        case 'power'
+        y = RF.engine_power./RF.v- RF.v.^2*truck.c_d*truck.front_area*1.177*0.5;
+        case 'fuel'
+        y = 1/kappa*RF.fuel_rate./RF.v- RF.v.^2*truck.c_d*truck.front_area*1.177*0.5;
+    end
     ax(q) = subplot(1,3,q);
     mdl=fitlm(X,y,'RobustOpts',robust_opt);
     hold on
