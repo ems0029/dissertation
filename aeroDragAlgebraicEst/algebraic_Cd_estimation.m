@@ -1,16 +1,19 @@
+% algebraic_Cd_estimation.m Performs Cd estimation on real truck platooning
+% data following the approach in [1]. The data is from a 30' following
+% platoon in a test track setting with a C_dA ~= 4.46. 
+% Code include the option to set the values constant for debugging purposes.
+% Sources:
+% [1] Wang, Zejiang, Adian Cook, Yunli Shao, Vivek Sujan, Paul Chambon, Dean Deter, and Nolan Perry. 
+% "Heavy-Duty Vehicle Air Drag Coefficient Estimation: From an Algebraic Perspective." 
+% In 2023 American Control Conference (ACC), pp. 3169-3174. IEEE, 2023.
 clearvars
 close all
-
 
 %% debug switch (set values constant)
 debugOn = false;
 
 %% load data
 subtbl = readtable('working_example.csv');
-% load("..\validation_analysis\lookups\tbl_canada_2_15_2024.mat",'tbl')
-% tbl = load("..\validation_analysis\lookups\tbl_jdsmc_2_15_2024.mat","tbl_wfeat").tbl_wfeat;
-% subtbl = tbl(tbl.ID==30,:);
-% writetable(timetable2table(subtbl(:,{'time','v','mass_eff','engine_power','grade_estimate'})),'working_example.csv')
 
 %% Assign inputs
 t = (0:height(subtbl)-1)'/10;    
@@ -52,7 +55,7 @@ annotation("textbox",[gcf().Children.Children(2).Position(1),gcf().Children.Chil
     'EdgeColor','k')
 
 %% Calculate Solution
-% cumulative integral for 10 Hz data
+% cumulative integral for data
 itg = @(x) cumtrapz(t,x);
 
 % Need to construct p1(t) p2(t) and q(t)
