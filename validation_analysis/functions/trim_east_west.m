@@ -3,21 +3,21 @@ function tbl = trim_east_west(tbl)
 % Use these bounds
 
 %east side geobounds
-geoBounds(1).startX =  2121.5;
-geoBounds(1).startY =  -1796.4;
-% geoBounds(1).startX =  1416.3;
-% geoBounds(1).startY =  -1221.99;
-geoBounds(1).endX = 9360.5;
-geoBounds(1).endY = -4571.55;
-% geoBounds(1).endX = 8140.47;
-% geoBounds(1).endY = -3940.34;
+% geoBounds(1).startX =  2121.5;
+% geoBounds(1).startY =  -1796.4;
+% geoBounds(1).endX = 9360.5;
+% geoBounds(1).endY = -4571.55;
+geoBounds(1).startX =  1416.3;
+geoBounds(1).startY =  -1221.99;
+geoBounds(1).endX = 8140.47;
+geoBounds(1).endY = -3940.34;
 geoBounds(1).errorBound = 10.0;
 
 %west side bounds
-geoBounds(2).startX =  8888.5;
-geoBounds(2).startY =  -4308.2;
-% geoBounds(2).startX =  8148;
-% geoBounds(2).startY =  -3896.43;
+% geoBounds(2).startX =  8888.5;
+% geoBounds(2).startY =  -4308.2;
+geoBounds(2).startX =  8148;
+geoBounds(2).startY =  -3896.43;
 geoBounds(2).endX = 1418.5;
 geoBounds(2).endY = -1170.1;
 geoBounds(2).errorBound = 10.0;

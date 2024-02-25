@@ -21,6 +21,7 @@ run_times = gs(runIDs);
 %find closest ref number in gps time
 for q = 1:length(run_times)
     [d,mindx]=min(abs(run_times(q)-ref_times));
+    fprintf('nearest reference is %.0f seconds away\n',d)
     %     refID(q) = refIDs(mindx);
     tbl.refID(tbl.runID==q)=refIDs(mindx);
 end

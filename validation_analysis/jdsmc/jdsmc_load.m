@@ -19,7 +19,7 @@ for q = 1:length(matfiles)
 
     subtbl = [repmat(table(truck,numTrucks,lead_ctrl,follow_ctrl,runIter),height(subtbl),1),subtbl];
     
-%     subtbl = get_weather_3_0_new_names(subtbl);
+    subtbl = get_weather_3_0_new_names(subtbl,180);
     tblArr{q}=subtbl;
 
 end
@@ -99,12 +99,19 @@ end
 
 tbl_wfeat = vertcat(tblArr{:});
 
-tbl_wfeat.P_aero = 0.5*8.0779*0.79*1.225*(tbl_wfeat.v).^2.*tbl_wfeat.v;
+mask_rf = tbl_wfeat.truck~="RF";
+try 
+    tbl_wfeat.P_aero(mask_rf) = 0.5*10*0.7.*tbl_wfeat.amb_density(mask_rf)*(tbl_wfeat.v(mask_rf)).^2.*tbl_wfeat.v(mask_rf);
+    tbl_wfeat.P_aero(~mask_rf) = 0.5*10*0.55.*tbl_wfeat.amb_density(~mask_rf)*(tbl_wfeat.v(~mask_rf)).^2.*tbl_wfeat.v(~mask_rf);
+catch
+    tbl_wfeat.P_aero(mask_rf) = 0.5*10*0.7.*1.225*(tbl_wfeat.v(mask_rf)).^2.*tbl_wfeat.v(mask_rf);
+    tbl_wfeat.P_aero(~mask_rf) = 0.5*10*0.55.*1.225*(tbl_wfeat.v(~mask_rf)).^2.*tbl_wfeat.v(~mask_rf);
+end
 
 tbl_wfeat.runID = findgroups(tbl_wfeat.numTrucks,tbl_wfeat.lead_ctrl,tbl_wfeat.follow_ctrl,tbl_wfeat.runIter);
 
 tbl_wfeat = add_reference_id(tbl_wfeat);
 
-
+tbl = tbl_wfeat;
 
 
