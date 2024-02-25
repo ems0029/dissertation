@@ -19,7 +19,6 @@ for q = 1:length(matfiles)
 
     subtbl = [repmat(table(truck,numTrucks,lead_ctrl,follow_ctrl,runIter),height(subtbl),1),subtbl];
     
-    subtbl = get_weather_3_0_new_names(subtbl,180);
     tblArr{q}=subtbl;
 
 end
@@ -66,20 +65,38 @@ tbl = add_missing_rows(tbl);
 tbl = add_missing_rf_7(tbl);
 
 % data_imputation
-tbl_i = jdsmc_imputation(tbl);
+tbl = jdsmc_imputation(tbl);
 
 %% create east/west ID and add reference IDs TODO
 %repeated to deal with imputation
-tbl_i = trim_east_west(tbl_i);
+tbl = trim_east_west(tbl);
 
-%% add grade lookups
-%todo
+%% eastbound westboud cumulative distance and grade/course lookup
+tblArr=cell(length(matfiles),1);
+ID =findgroups(tbl.ID,tbl.westbound);
+for q = 1:max(ID)
+    subtbl = tbl(ID==q,:);
+    mask =subtbl.eastbound|subtbl.westbound;
+    %only integrate on east or westbound
+    subtbl.x(mask) = cumtrapz(subtbl.time(mask),subtbl.v(mask));
+    tblArr{q} = subtbl;
+end
+tbl = vertcat(tblArr{:});
+
+west = [true false];
+tbl.grade_estimate_lookup = nan(height(tbl),1);
+for q = 1:2
+    mask = tbl.westbound==west(q)&tbl.eastbound~=west(q);
+    tbl(mask,:) = grade_spread_to_leader(tbl(mask,:));
+    tbl(mask,:) = course_spread_to_leader(tbl(mask,:));
+end
 
 %% add features and further trim
 tblArr=cell(length(matfiles),1);
 
-for q = 1:max(tbl_i.ID)
-    subtbl = tbl_i(tbl_i.ID==q,:);
+for q = 21:max(tbl.ID)
+    subtbl = tbl(tbl.ID==q,:);
+    subtbl =sortrows(subtbl,"time");
     switch subtbl.truck(1)
         case "RF"
             param_path = "A2_JDSMC.mat";
@@ -91,9 +108,10 @@ for q = 1:max(tbl_i.ID)
             error("truck not found")
     end
     subtbl = add_features(subtbl,param_path);
+    subtbl = get_weather_3_0_new_names(subtbl,180);
+    subtbl = body_axis_wind(subtbl,0.5);
     %cut off any non-eastbound/westbound points
     subtbl = subtbl(subtbl.eastbound|subtbl.westbound,:);
-    
     tblArr{q} = subtbl;
 end
 
