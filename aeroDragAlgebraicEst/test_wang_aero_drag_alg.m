@@ -6,10 +6,12 @@ close all
 debugOn = false;
 
 %% load data
-subtbl = readtable('working_example.csv');
+% subtbl = readtable('working_example.csv');
 % load("..\validation_analysis\lookups\tbl_canada_2_15_2024.mat",'tbl')
-% tbl = load("..\validation_analysis\lookups\tbl_jdsmc_2_15_2024.mat","tbl_wfeat").tbl_wfeat;
-% subtbl = tbl(tbl.ID==30,:);
+load("..\validation_analysis\lookups\tbl_jdsmc_2_24_2024.mat",'tbl');
+
+subtbl = tbl(tbl.ID==20,:);
+subtbl = smoothdata(subtbl(:,{'time','v','mass_eff','engine_power','grade_estimate'}));
 % writetable(timetable2table(subtbl(:,{'time','v','mass_eff','engine_power','grade_estimate'})),'working_example.csv')
 
 %% Assign inputs
@@ -75,14 +77,14 @@ for i = 1:length(p1)
     th_star(:,i) = inv(Mpp([2*i-1, 2*i],:))*Mpq(:,i);
 end
 
-eIdx = 1000;
+eIdx = 6600;
 figure(2)
 subplot(2,1,1)
 plot(t(1:eIdx),th_star(2,1:eIdx)/k)
 xlabel('$t$','Interpreter','latex')
 ylabel('$C_d$','Interpreter','latex')
 yline(0.446,'--','C_{d,ref}=0.446')
-ylim([-100 100])
+% ylim([-1000 1000])
 subplot(2,1,2)
 plot(t(1:eIdx),th_star(1,1:eIdx))
 xlabel('$t$','Interpreter','latex')
