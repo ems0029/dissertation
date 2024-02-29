@@ -2,37 +2,32 @@ function a_rls = RLS_again(subtbl,lambda)
 % take in a subtable with acceleration estimate and 
 a_mdl = subtbl.a_modeled_w_drr;
 a_est = subtbl.a_estimate;
-stheta = sin(subtbl.grade);
-vsq = subtbl.v_noise.^2;
-p=1;
+
+p=27;
 %initialize
-x = zeros(p+1,1); %px1
-w = zeros(p+1,1); %px1
-d = zeros(p+1,1); %px1
+x = [1;zeros(p,1)]; %p+1 x 1
+w = zeros(p+1,1); %p+1 x 1
 a_rls = zeros(size(a_mdl));
 del = 1e10;
 del_B = 1;
 P = eye(p+1)*del; %pxp
 
 for q = 1:height(subtbl)
-    if any(subtbl.decel_on(max(1,q-del_B):q))
-        a_rls(q) = [1;a_mdl(q)]'*w;
-        % no x refreshment
-    else
-        lambda_A=lambda;%-0.05*max(tanh(subtbl.engine_power(q)/10000),0);
-        x= [1;a_mdl(q)];
+    if p > 1
+        x(3:p+1) = x(2:p); % shift out old measurement
+    end
+    x(2) = a_mdl(q);
+    if all(~(subtbl.decel_on(max(1,q-del_B):q)))
         d = a_est(q);
         alph=d-x'*w;
-        g = P*x/(lambda_A+x'*P*x);
-        P=1/lambda_A*P-g*x'/lambda_A*P;
+        g = P*x/(lambda+x'*P*x);
+        P=1/lambda*P-g*x'/lambda*P;
         w=w+alph*g;
-        % a posteriori a_dist
-        w_(q,:)=w;
-        a_rls(q) = x'*w;
+        % weights for plotting
+%         w_(q,:)=w;
     end
+    a_rls(q) = x'*w;
 end
 % error in mass
-
-plot(w_)
 
 end
