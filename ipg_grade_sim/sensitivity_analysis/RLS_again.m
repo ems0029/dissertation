@@ -1,15 +1,17 @@
-function a_rls = RLS_again(subtbl,lambda)
+function a_rls = RLS_again(subtbl,lambda,p)
 % take in a subtable with acceleration estimate and 
-a_mdl = subtbl.a_modeled_w_drr;
-a_est = subtbl.a_estimate;
+a_mdl = fillmissing(subtbl.a_modeled_w_drr,'nearest');
+a_est = fillmissing(subtbl.a_estimate,'nearest');
 
-p=27;
+if ~exist('p','var')
+    p=1;
+end
 %initialize
 x = [1;zeros(p,1)]; %p+1 x 1
 w = zeros(p+1,1); %p+1 x 1
 a_rls = zeros(size(a_mdl));
 del = 1e10;
-del_B = 1;
+del_B = 20;
 P = eye(p+1)*del; %pxp
 
 for q = 1:height(subtbl)

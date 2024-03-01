@@ -1,12 +1,15 @@
-function a_brakeless = constant_adjust(subtbl)
+function a_brakeless = constant_adjust(subtbl,win)
 % take in a subtable with acceleration estimate and 
-a_mdl = subtbl.a_modeled_w_drr;
-a_est = subtbl.a_estimate;
+a_mdl = fillmissing(subtbl.a_modeled_w_drr,'nearest');
+a_est = fillmissing(subtbl.a_estimate,'nearest');
 %initialize
+
+if ~exist('win','var')
+    win=100;
+end
 
 a_brakeless = zeros(size(a_mdl));
 del_B=20;
-win=100;
 ebar = 0;
 ri = 0;
 i=1;
