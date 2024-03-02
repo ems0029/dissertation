@@ -6,7 +6,13 @@ if ~exist('tbl','var')
 end
 
 tbl.ID = findgroups(tbl.truck,tbl.ego_m,tbl.other_m,tbl.set_velocity,tbl.drag_reduction_ratio);
-
+try
+    tbl = addprop(tbl,{'offsets','noise'},{'table','table'});
+catch ME
+    disp(ME)
+end
+tbl.Properties.CustomProperties.noise = struct('v',true,'grade',true,'engine_power',true);
+tbl.Properties.CustomProperties.offsets = struct('front_area',0,'trailer_mass',0,'f_rr_c',0);
 
 rng("default")
 addpath('..\functions\')
@@ -16,6 +22,9 @@ addpath('..\lookups\truck_params\')
 P_aero_true = zeros(max(tbl.ID),1);
 P_AD_true = zeros(max(tbl.ID),1);
 NPC_true = zeros(max(tbl.ID),1);
+P_aero_inf = cell(max(tbl.ID),4);
+P_AD_inf = cell(max(tbl.ID),4);
+NPC_inf = cell(max(tbl.ID),4);
 aero_offset = zeros(max(tbl.ID),1);
 rr_offset = zeros(max(tbl.ID),1);
 mass_offset = zeros(max(tbl.ID),1);
@@ -33,11 +42,6 @@ firf = designfilt('lowpassfir','FilterOrder',order, ...
 for i = 1:max(tbl.ID)
 
     subtbl=tbl(tbl.ID==i,:);
-
-    %% get truth
-    P_aero_true(i) = mean(subtbl.PwrL_Aero);
-    P_AD_true(i) = mean(subtbl.PwrL_Brake);
-    NPC_true(i) = mean(subtbl.engine_power)/nn_C.predict([mean(subtbl.v),subtbl.ego_m(1)+15000]);
 
     %% add noise
     subtbl.grade_true = subtbl.grade;
@@ -73,11 +77,31 @@ for i = 1:max(tbl.ID)
     subtbl = model_acceleration_with_aero_ipg(subtbl,...
         struct('front_area',aero_offset(i),'trailer_mass',mass_offset(i),'f_rr_c',rr_offset(i)));
 
+    subtbl_aero.Properties.CustomProperties.offsets = struct('front_area',aero_offset(i),'trailer_mass',0,'f_rr_c',0);
+    subtbl_rr.Properties.CustomProperties.offsets = struct('front_area',0,'trailer_mass',0,'f_rr_c',rr_offset(i));
+    subtbl_mass.Properties.CustomProperties.offsets = struct('front_area',0,'trailer_mass',mass_offset(i),'f_rr_c',0);
+    subtbl.Properties.CustomProperties.offsets = struct('front_area',aero_offset(i),'trailer_mass',mass_offset(i),'f_rr_c',rr_offset(i));
+    
     %% get outputs for all
 
     % here goes the function to run rls and cadj
-    subtbl_array{i}=the_wringer({subtbl_aero,subtbl_rr,subtbl_mass,subtbl});
-    
-    P_AD_true(i) = trapz(subtbl.time,subtbl.PwrL_Brake)/range(subtbl.time);
-    
+    [P_AD_inf{i}, P_aero_inf{i}, NPC_inf{i},...
+        P_AD_true(i), P_aero_true(i), NPC_true(i)] = the_wringer({subtbl_aero,subtbl_rr,subtbl_mass,subtbl},nn_C);
+    % need a way of getting the percent error in P_AD, P_aero, NPC
+
 end
+P_AD_inf = vertcat(P_AD_inf{:});
+P_aero_inf = vertcat(P_aero_inf{:});
+NPC_inf = vertcat(NPC_inf{:});
+
+plot(aero_offset./10,(cellfun(@(x) x,P_aero_inf(:,1))-P_aero_true)./P_aero_true,'.','DisplayName','P_{aero}')
+hold on
+plot(aero_offset./10,(cellfun(@(x) x(1),P_AD_inf(:,1),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - RLS')
+plot(aero_offset./10,(cellfun(@(x) x(2),P_AD_inf(:,1),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - Constant Offset')
+plot(aero_offset./10,(cellfun(@(x) x(1),NPC_inf(:,1),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - RLS')
+plot(aero_offset./10,(cellfun(@(x) x(2),NPC_inf(:,1),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - RLS')
+legend('Location','northwest')
+
+
+P_AD_inf = vertcat(P_AD_inf{:});
+
