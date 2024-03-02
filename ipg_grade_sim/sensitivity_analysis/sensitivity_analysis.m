@@ -22,9 +22,10 @@ addpath('..\lookups\truck_params\')
 P_aero_true = zeros(max(tbl.ID),1);
 P_AD_true = zeros(max(tbl.ID),1);
 NPC_true = zeros(max(tbl.ID),1);
-P_aero_inf = cell(max(tbl.ID),4);
-P_AD_inf = cell(max(tbl.ID),4);
-NPC_inf = cell(max(tbl.ID),4);
+mass_true = zeros(max(tbl.ID),1);
+P_aero_inf = cell(max(tbl.ID),1);
+P_AD_inf = cell(max(tbl.ID),1);
+NPC_inf = cell(max(tbl.ID),1);
 aero_offset = zeros(max(tbl.ID),1);
 rr_offset = zeros(max(tbl.ID),1);
 mass_offset = zeros(max(tbl.ID),1);
@@ -42,7 +43,8 @@ firf = designfilt('lowpassfir','FilterOrder',order, ...
 for i = 1:max(tbl.ID)
 
     subtbl=tbl(tbl.ID==i,:);
-
+    mass_true(i)=subtbl.ego_m(1)+15000;
+    
     %% add noise
     subtbl.grade_true = subtbl.grade;
     subtbl.v_true = subtbl.v;
@@ -94,14 +96,47 @@ P_AD_inf = vertcat(P_AD_inf{:});
 P_aero_inf = vertcat(P_aero_inf{:});
 NPC_inf = vertcat(NPC_inf{:});
 
-plot(aero_offset./10,(cellfun(@(x) x,P_aero_inf(:,1))-P_aero_true)./P_aero_true,'.','DisplayName','P_{aero}')
+%% aero errors
+figure(1)
+clf
 hold on
-plot(aero_offset./10,(cellfun(@(x) x(1),P_AD_inf(:,1),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - RLS')
-plot(aero_offset./10,(cellfun(@(x) x(2),P_AD_inf(:,1),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - Constant Offset')
-plot(aero_offset./10,(cellfun(@(x) x(1),NPC_inf(:,1),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - RLS')
-plot(aero_offset./10,(cellfun(@(x) x(2),NPC_inf(:,1),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - RLS')
+plot(100*aero_offset./10,100*(cellfun(@(x) x,P_aero_inf(:,1))-P_aero_true)./P_aero_true,'.','DisplayName','P_{aero}')
+plot(100*aero_offset./10,100*(cellfun(@(x) x(1),P_AD_inf(:,1),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - RLS')
+plot(100*aero_offset./10,100*(cellfun(@(x) x(2),P_AD_inf(:,1),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - Constant Offset')
+plot(100*aero_offset./10,100*(cellfun(@(x) x(1),NPC_inf(:,1),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - RLS')
+plot(100*aero_offset./10,100*(cellfun(@(x) x(2),NPC_inf(:,1),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - Constant Offset')
 legend('Location','northwest')
+xtickformat('percentage')
+ytickformat('percentage')
+xlabel('Error in C_dA_f')
+ylabel('Error in Inferred Value')
 
+%% RR errors
+figure(2)
+clf
+hold on
+plot(100*rr_offset./0.01,100*(cellfun(@(x) x, P_aero_inf(:,2))-P_aero_true)./P_aero_true,'.','DisplayName','P_{aero}')
+plot(100*rr_offset./0.01,100*(cellfun(@(x) x(1),P_AD_inf(:,2),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - RLS')
+plot(100*rr_offset./0.01,100*(cellfun(@(x) x(2),P_AD_inf(:,2),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - Constant Offset')
+plot(100*rr_offset./0.01,100*(cellfun(@(x) x(1), NPC_inf(:,2),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - RLS')
+plot(100*rr_offset./0.01,100*(cellfun(@(x) x(2), NPC_inf(:,2),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - Constant Offset')
+legend('Location','best')
+xtickformat('percentage')
+ytickformat('percentage')
+xlabel('Error in C_{rr}')
+ylabel('Error in Inferred Value')
 
-P_AD_inf = vertcat(P_AD_inf{:});
-
+%% mass errors
+figure(3)
+clf
+hold on
+plot(100*mass_offset./mass_true',100*(cellfun(@(x) x, P_aero_inf(:,3))-P_aero_true)./P_aero_true,'.','DisplayName','P_{aero}')
+plot(100*mass_offset./mass_true',100*(cellfun(@(x) x(1),P_AD_inf(:,3),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - RLS')
+plot(100*mass_offset./mass_true',100*(cellfun(@(x) x(2),P_AD_inf(:,3),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - Constant Offset')
+plot(100*mass_offset./mass_true',100*(cellfun(@(x) x(1), NPC_inf(:,3),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - RLS')
+plot(100*mass_offset./mass_true',100*(cellfun(@(x) x(2), NPC_inf(:,3),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - Constant Offset')
+legend('Location','best')
+xtickformat('percentage')
+ytickformat('percentage')
+xlabel('Error in Mass')
+ylabel('Error in Inferred Value')
