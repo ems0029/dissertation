@@ -110,8 +110,8 @@ for q = 1:max(tbl.ID)
         otherwise
             error("truck not found")
     end
-%     subtbl = get_weather_3_0_new_names(subtbl);
-%     subtbl = body_axis_wind(subtbl,0.5);
+    subtbl = get_weather_3_0_new_names(subtbl,300);
+    subtbl = body_axis_wind(subtbl,0.5);
     subtbl = add_features(subtbl,param_path);
     tblArr{q} = subtbl;
 end
