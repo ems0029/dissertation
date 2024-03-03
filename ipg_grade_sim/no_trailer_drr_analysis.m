@@ -44,7 +44,7 @@ dv = dv(~isoutlier(dv,'median'));
 tbl_trim = tbl_trim(ismember(tbl_trim.ID,validID),:);
 
 %% get groupstats
-stats =grpstats(tbl_trim,{'truck','ID'},{'mean'},'DataVars',{'engine_power','fuel_rate','v','mass_eff','ego_m','engine_rpm','drag_reduction_ratio'});
+stats =grpstats(tbl_trim,{'truck','ID'},{'mean'},'DataVars',{'engine_power','fuel_rate','v','PT_engine_be','mass_eff','ego_m','engine_rpm','drag_reduction_ratio'});
 stats.mean_ego_m = stats.mean_ego_m +15000;
 stats.mean_P_AD = grpstats(tbl_trim.P_AD,{tbl_trim.truck,tbl_trim.ID},'mean');
 stats.mean_E_AD = grpstats(tbl_trim.P_AD./tbl_trim.mass_eff,{tbl_trim.truck,tbl_trim.ID},'mean').*3.6;
@@ -64,7 +64,7 @@ stats.drag_fraction = lm_P_R.predict([stats.mean_v,stats.mean_ego_m]);
 stats.PRR = (stats.mean_drag_reduction_ratio-1).*stats.drag_fraction+1
 stats.PIF = stats.mean_P_AD_true./stats.mean_P_aero_true.*stats.mean_drag_reduction_ratio.*stats.drag_fraction
 
-fitlm([stats.PIP+stats.PRR],stats.mean_NPC).plot
+% fitlm([stats.PIF+stats.PRR],stats.mean_NPC).plot
 
 
 %% baseline power/fuel regression
@@ -121,7 +121,7 @@ legend('Data','1:1','Location','northwest')
 subplot(2,2,2);figure(1);clf;hold on;colormap default
 % subplot(2,2,1);
 colors = 1-stats.mean_drag_reduction_ratio;
-Y_true = stats.PIP;
+Y_true = stats.PIF;
 % Y = stats.mean_P_AD./sqrt(stats.mean_mass_eff)./stats.mean_v.^2
 Z = stats.mean_NPC;
 X = stats.PRR;
@@ -181,8 +181,6 @@ hold on
 lm =fitlm(Y,Z_L)
 lm.plot
 scatter(Y,Z_L,'.')
-
-
 
 lm =stepwiselm(stats,"linear","PredictorVars",{'mean_v','mean_ego_m','mean_E_AD_true'},"ResponseVar","mean_NPC")
 

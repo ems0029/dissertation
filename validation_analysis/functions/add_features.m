@@ -53,7 +53,7 @@ subtbl.decel_on=subtbl.brake_by_driver |...
     subtbl.retarder_pct_torque~=0;
 
 subtbl = model_acceleration_with_aero(subtbl, param_path);
-subtbl.a_rls = RLS(subtbl,0.995);
+subtbl.a_rls = RLS(subtbl,0.995,5);
 subtbl.a_cadj = constant_adjust(subtbl);
 subtbl.a_residual = subtbl.a_modeled_w_drr-subtbl.a_estimate;
 subtbl.a_residual_rls = subtbl.a_rls-subtbl.a_estimate;
