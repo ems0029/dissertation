@@ -56,3 +56,6 @@ ipg_grade_sim/archived/ecdf_grade.mat
 ipg_grade_sim/processed/tbl_sensitivity_analysis.mat
 ipg_grade_sim/combinatorial_analysis.m
 validation_analysis/lookups/tbl_jdsmc_3_2_2024.mat
+validation_analysis/lookups/tbl_I85_3_4_2024.mat
+validation_analysis/lookups/tbl_jdsmc_3_4_2024.mat
+validation_analysis/lookups/tbl_canada_3_5_2024.mat

@@ -13,7 +13,7 @@ switch lower(campaign)
     case "doe_onroad"
         bsln_str ="NA";
         tbl.leading = tbl.truck=="A1";
-        runID = findgroups(tbl.westbound,tbl.spacing,tbl.runIter);
+        runID = findgroups(tbl.numTrucks,tbl.spacing,tbl.runIter);
     case "doe_testtrack"
         bsln_str ={'BASELINE','NMPC_CRUISE'};
         tbl.leading = tbl.truck=="A1"|(tbl.truck =="T13" & tbl.numTrucks == "2T");
@@ -85,7 +85,7 @@ tbl = convertvars(tbl,'leading','double');
             tbl.range_estimate(lead_idx)=interp1(x,v(ia),tbl.gps_seconds(lead_idx),'nearest','extrap');
         catch ME
             disp(ME)
-            tbl.range_estimate(lead_idx)=nanmean(tbl.range_estimate(follow_idx));
+            tbl.range_estimate(lead_idx)=nanmedian(tbl.range_estimate(follow_idx));
         end
     end
 end

@@ -36,11 +36,6 @@ tbl.runID = findgroups(tbl.numTrucks,tbl.spacing,tbl.runIter);
 % can't handle logicals/ints in some of the time math
 tbl = convertvars(tbl,{'brake_by_driver','brakes_on','gear_number'},'double');
 
-%% add follower headway to leader
-
-tbl = add_follower_gap(tbl,"DOE_onroad");
-
-
 %% mask the non I85 data
 % geoplot
 mask = tbl.lat<32.6435&tbl.lon<-85.3518;
@@ -48,26 +43,23 @@ clf;geoscatter(tbl.lat(1:10:end),tbl.lon(1:10:end),'Marker','.','MarkerEdgeAlpha
 hold on
 geoscatter(tbl.lat(mask),tbl.lon(mask),'Marker','.','MarkerEdgeAlpha',0.1,'MarkerEdgeColor',[232, 119, 34]./255)
 geobasemap topographic
+try
 exportgraphics(gcf,'DOE_onroad_geomap.png','Resolution',300)
+end
+close
 tbl = tbl(mask,:);
-
-%% get the distance traveled
-
-
 
 %% divide east and west segments
 
 % add enu, and a preliminary east-west division
 tbl = get_east_west_prelim(tbl,"DOE_onroad");
 
-%%  bounding boxes
-% theta0 = [-3.185e4,-1.887e4];
-% theta=atan2(tbl.east-theta0(1),tbl.north-theta0(2));
-% tbl.eastbound = [false;rem(cumsum(diff(theta)>5),2)];
-% tbl.westbound = ~tbl.eastbound;
 tbl.eastbound = tbl.course>0.5&tbl.course<1.9;
 tbl.westbound = tbl.course>-2.9&tbl.course<-1.32;
 
+%% add follower headway to leader
+
+tbl = add_follower_gap(tbl,"DOE_onroad");
 
 %% add features and further trim
 tblArr=cell(length(matfiles),1);

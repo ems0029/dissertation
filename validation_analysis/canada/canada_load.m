@@ -11,6 +11,7 @@ addpath(genpath("../lookups"))
 
 %% Load data and add metadata
 tblArr=cell(length(matfiles),1);
+tic
 parfor q = 1:length(matfiles)
 
     subtbl = flat_auburn_data(strcat(matfiles(q).folder,'\',matfiles(q).name));
@@ -23,7 +24,7 @@ parfor q = 1:length(matfiles)
     tblArr{q}=subtbl;
 
 end
-
+toc
 tbl = vertcat(tblArr{:});
 tbl = convertvars(tbl,{'brakes_on','brake_by_driver','gear_number'},'double');
 
@@ -53,13 +54,16 @@ tbl = table2timetable(tbl);
 nrc_tbl = table2timetable(nrc_tbl);
 
 ctrl_tbl = nrc_tbl(nrc_tbl.truck_NRC=="Ctrl",:);
-A1_tbl = nrc_tbl(nrc_tbl.truck_NRC=="Ctrl",:);
+A1_tbl = nrc_tbl(nrc_tbl.truck_NRC=="A1",:);
 
 tblArr =cell(max(tbl.ID),1);
 for q = 1:max(tbl.ID)
     subtbl = tbl(tbl.ID==q,:);
     subtbl = synchronize(subtbl,ctrl_tbl,'intersection');
-
+    disp(height(subtbl))
+    subtbl = synchronize(subtbl,A1_tbl,'first');
+    disp(height(subtbl))
+    
     tblArr{q}=subtbl;
 end
 
@@ -74,12 +78,13 @@ parfor q = 1:length(tblArr)
         tblArr{q} = body_axis_wind(tblArr{q},0.2);
         tblArr{q} = add_features(tblArr{q},param_path);
         tblArr{q} = tblArr{q}(...
-            find(diff(tblArr{q}.track_north_NRC)==-1,1,'first') ...
-            :find(diff(tblArr{q}.track_north_NRC)==-1,1,'last'), :) 
+            find(diff(tblArr{q}.track_north_NRC_subtbl)==-1,1,'first') ...
+            :find(diff(tblArr{q}.track_north_NRC_subtbl)==-1,1,'last'), :) 
     end
 end
 %remove empties
 tblArr = tblArr(cellfun(@(x) ~isempty(x),(tblArr)));
 tbl_all = vertcat(tblArr{:});
 
-tbl_all.P_aero = 0.5*0.679*8.0779.*1.225.*(tbl_all.v).^2.*tbl_all.v
+tbl_all.P_aero = 0.5*5.5*1.225.*(tbl_all.v).^2.*tbl_all.v;
+tbl_all.P_aero_wind = 0.5*5.5.*tbl_all.amb_density.*(tbl_all.wind_v_veh).^2.*tbl_all.v;

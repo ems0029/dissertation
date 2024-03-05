@@ -118,13 +118,10 @@ end
 tbl_wfeat = vertcat(tblArr{:});
 
 mask_rf = tbl_wfeat.truck~="RF";
-% try 
-%     tbl_wfeat.P_aero(mask_rf) = 0.5*10*0.7.*tbl_wfeat.amb_density(mask_rf).*(tbl_wfeat.wind_v_veh(mask_rf)).^2.*tbl_wfeat.v(mask_rf);
-%     tbl_wfeat.P_aero(~mask_rf) = 0.5*10*0.55.*tbl_wfeat.amb_density(~mask_rf).*(tbl_wfeat.wind_v_veh(~mask_rf)).^2.*tbl_wfeat.v(~mask_rf);
-% catch
-    tbl_wfeat.P_aero(mask_rf) = 0.5*10*0.7.*1.225*(tbl_wfeat.v(mask_rf)).^2.*tbl_wfeat.v(mask_rf);
-    tbl_wfeat.P_aero(~mask_rf) = 0.5*10*0.55.*1.225*(tbl_wfeat.v(~mask_rf)).^2.*tbl_wfeat.v(~mask_rf);
-% end
+tbl_wfeat.P_aero_wind(mask_rf) = 0.5*10*0.7.*tbl_wfeat.amb_density(mask_rf).*(tbl_wfeat.wind_v_veh(mask_rf)).^2.*tbl_wfeat.v(mask_rf);
+tbl_wfeat.P_aero_wind(~mask_rf) = 0.5*10*0.55.*tbl_wfeat.amb_density(~mask_rf).*(tbl_wfeat.wind_v_veh(~mask_rf)).^2.*tbl_wfeat.v(~mask_rf);
+tbl_wfeat.P_aero(mask_rf) = 0.5*10*0.7.*1.225*(tbl_wfeat.v(mask_rf)).^2.*tbl_wfeat.v(mask_rf);
+tbl_wfeat.P_aero(~mask_rf) = 0.5*10*0.55.*1.225*(tbl_wfeat.v(~mask_rf)).^2.*tbl_wfeat.v(~mask_rf);
 
 tbl_wfeat.runID = findgroups(tbl_wfeat.numTrucks,tbl_wfeat.lead_ctrl,tbl_wfeat.follow_ctrl,tbl_wfeat.runIter);
 

@@ -1,4 +1,8 @@
-function nfc_tbl_aug = process_nfc_tbl(nfc_tbl_aug,drr_model,P_AD_adjustment)
+function nfc_tbl_aug = process_nfc_tbl(nfc_tbl_aug,drr_model,P_AD_adjustment,use_wind)
+narginchk(3,4)
+if ~exist('use_wind','var')
+    use_wind=false;
+end
 % take in an augmented nfc table and add the normalized fuel consumption to
 % it
 %% power
@@ -39,25 +43,48 @@ switch lower(drr_model)
         DRR_ref = nfc_tbl_aug.mean_drag_reduction_ratio_ref;
         fprintf('Using the Schmid DRR model\n')
 end
-P_aero_plat = nfc_tbl_aug.mean_P_aero_T_plat;
-P_aero_ref = nfc_tbl_aug.mean_P_aero_T_ref;
+
+if use_wind
+    P_aero_plat = nfc_tbl_aug.mean_P_aero_wind_T_plat;
+    P_aero_ref = nfc_tbl_aug.mean_P_aero_wind_T_ref;
+else
+    P_aero_plat = nfc_tbl_aug.mean_P_aero_T_plat;
+    P_aero_ref = nfc_tbl_aug.mean_P_aero_T_ref;
+end
 
 
 nfc_tbl_aug.NPC_true = ... 
     ( P_plat.T ./ P_plat.C )./... %TC plat
     ( P_ref.T ./ P_ref.C ); %TC ref
+nfc_tbl_aug.delP_true = ... 
+    (( P_plat.T ./ P_plat.C )-... %TC plat
+    ( P_ref.T ./ P_ref.C )).*mean([P_plat.C,P_ref.C],2); %TC ref
 
 nfc_tbl_aug.NPC_inf = ...
     P_plat.T./ ...
     (P_plat.T - (P_AD_plat + P_aero_plat.*DRR_plat)+(P_AD_ref+P_aero_ref.*DRR_ref));
+nfc_tbl_aug.delP_inf = ...
+    (P_AD_plat + P_aero_plat.*DRR_plat)-(P_AD_ref+P_aero_ref.*DRR_ref);
+nfc_tbl_aug.delPAD = ...
+    (P_AD_plat)-(P_AD_ref);
+nfc_tbl_aug.delP_fan = ...
+    1000*(nfc_tbl_aug.mean_fan_power_est_T_plat-nfc_tbl_aug.mean_fan_power_est_T_ref);
+nfc_tbl_aug.delPaero = ...
+    (P_aero_plat.*DRR_plat)-(P_aero_ref.*DRR_ref);
+
 %% fuel
 nfc_tbl_aug.NFC_true = ...
     ( F_plat.T ./ F_plat.C ) ./...
     ( F_ref.T ./  F_ref.C );
+nfc_tbl_aug.delF_true = ...
+    (( F_plat.T ./ F_plat.C )-...
+    ( F_ref.T ./  F_ref.C )).*mean([F_plat.C,F_ref.C],2);
 
 nfc_tbl_aug.NFC_inf = ...
     F_plat.T ./ ...
     ( F_plat.T +...
     kappa()*((P_AD_ref+P_aero_ref.*DRR_ref) - (P_AD_plat + P_aero_plat.*DRR_plat)) );
 
+nfc_tbl_aug.delF_inf = ...
+    kappa()*(-(P_AD_ref+P_aero_ref.*DRR_ref) + (P_AD_plat + P_aero_plat.*DRR_plat));
 end
