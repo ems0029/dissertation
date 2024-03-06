@@ -44,7 +44,7 @@ hold on
 geoscatter(tbl.lat(mask),tbl.lon(mask),'Marker','.','MarkerEdgeAlpha',0.1,'MarkerEdgeColor',[232, 119, 34]./255)
 geobasemap topographic
 try
-exportgraphics(gcf,'DOE_onroad_geomap.png','Resolution',300)
+exportgraphics(gcf(),'DOE_onroad_geomap.png','Resolution',300)
 end
 close
 tbl = tbl(mask,:);

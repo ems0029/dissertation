@@ -1,3 +1,4 @@
+clearvars
 load('..\lookups\tbl_I85_3_4_2024.mat','tbl')
 
 tbl_trim = tbl(tbl.east>-30000&tbl.east<-1000,:);
@@ -9,7 +10,12 @@ tbl_trim.P_aero = 0.5*0.55*10.*1.225.*(tbl_trim.v).^2.*tbl_trim.v;
 tbl_trim.P_aero_wind = 0.5*0.55*10.*tbl_trim.amb_density.*(tbl_trim.wind_v_veh).^2.*tbl_trim.v;
 
 %% Make Table
-nfc_tbl = grpstats(tbl_trim,{'truck','spacing','westbound','ID'},"mean",'DataVars',{'engine_power','fuel_rate','P_AD_cadj','P_AD','P_AD_rls','P_aero','P_aero_wind','drag_reduction_ratio','drag_reduction_ratio_husseinpwr','drag_reduction_ratio_husseinrp','v','fan_power_est','mass_eff','wind_v','wind_v_veh','wind_yaw_veh','amb_density'});
+nfc_tbl = grpstats(tbl_trim,{'truck','spacing','westbound','ID'},...
+    "mean",'DataVars',{'engine_power','fuel_rate','P_AD_cadj','P_AD',...
+    'P_AD_rls','P_aero','P_aero_wind','drag_reduction_ratio', ...
+    'drag_reduction_ratio_husseinpwr','drag_reduction_ratio_husseinrp', ...
+    'v','fan_power_est','mass_eff','wind_v','wind_v_veh','wind_yaw_veh', ...
+    'amb_density'});
 nfc_tbl.trip_time = grpstats(tbl_trim,{'truck','spacing','westbound','ID'},"range",'DataVars',{'time'}).range_time;
 
 %% put into standard format
