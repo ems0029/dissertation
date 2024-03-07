@@ -45,9 +45,9 @@ for q=1:max(tbl.ID)
             error("truck not found")
     end
     subtbl = add_features(subtbl,param_path);
-%     subtbl = estimate_course(subtbl);
-%     subtbl = get_weather_3_0_new_names(subtbl,60*40);
-%     subtbl = body_axis_wind(subtbl,0.5);
+    subtbl = estimate_course(subtbl);
+    subtbl = get_weather_3_0_new_names(subtbl,60*35);
+    subtbl = body_axis_wind(subtbl,0.5);
     trim = find(subtbl.x>0.99,1,'first'):find(subtbl.x>0.99,1,'last');
     fprintf(['*-----------------------------------------------*' ...
            '\n Removing %u points before and after first lap' ...
@@ -77,7 +77,7 @@ for q=1:4
     % TODO add wind velocity if possible
     load(param_path,'truck')
     subtbl.P_aero = 0.5*truck.c_d*truck.front_area*1.225*(subtbl.v).^3;
-%     subtbl.P_aero_wind = 0.5*truck.c_d*truck.front_area*subtbl.amb_density.*(subtbl.wind_v_veh).^2.*subtbl.v;
+    subtbl.P_aero_wind = 0.5*truck.c_d*truck.front_area*subtbl.amb_density.*(subtbl.wind_v_veh).^2.*subtbl.v;
 %     subtbl.P_rr = truck.f_rr_c*9.81*(truck.tractor_mass+truck.trailer_mass).*subtbl.v;
 %     subtbl.drag_frac = subtbl.P_aero./(subtbl.P_aero+subtbl.P_rr);
 %     subtbl.drag_frac_w_fan = subtbl.P_aero./(subtbl.P_aero+subtbl.P_rr+subtbl.fan_power_est*1000);
