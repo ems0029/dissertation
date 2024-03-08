@@ -10,9 +10,10 @@ addpath('.\functions\')
 
 % load and merge tables
 table_1 = process_nfc_tbl(load("./lookups/nfc_tbl_aug_doe.mat",'nfc_tbl_aug').nfc_tbl_aug, drr_method, pad_adjustment, weather);
-table_2 = process_nfc_tbl(load("./lookups/nfc_tbl_aug_I85.mat",'nfc_tbl_aug').nfc_tbl_aug, drr_method, pad_adjustment, weather);
-table_3 = process_nfc_tbl(load("./lookups/nfc_tbl_aug_jdsmc.mat",'nfc_tbl_aug').nfc_tbl_aug, drr_method, pad_adjustment, weather);
-table_4 = process_nfc_tbl(load("./lookups/nfc_tbl_aug_canada.mat",'nfc_tbl_aug').nfc_tbl_aug, drr_method, pad_adjustment, weather);
+table_2 = process_nfc_tbl(load("./lookups/nfc_tbl_aug_canada.mat",'nfc_tbl_aug').nfc_tbl_aug, drr_method, pad_adjustment, weather);
+table_3 = process_nfc_tbl(load("./lookups/nfc_tbl_aug_I85.mat",'nfc_tbl_aug').nfc_tbl_aug, drr_method, pad_adjustment, weather);
+table_4 = process_nfc_tbl(load("./lookups/nfc_tbl_aug_jdsmc.mat",'nfc_tbl_aug').nfc_tbl_aug, drr_method, pad_adjustment, weather);
+
 nfc_tbl_aug = merge_tables(merge_tables(merge_tables(table_1,table_2),table_3),table_4);
 
 %% a couple of outliers
@@ -20,16 +21,20 @@ nfc_tbl_aug(nfc_tbl_aug.ID_plat==160,:)=[];
 nfc_tbl_aug(nfc_tbl_aug.ID_ref==160,:)=[];
 
 %% absolute results
-mdl = plotAbsPdiff(nfc_tbl_aug);
+mdl = plotAbsPdiff(nfc_tbl_aug)
 
-mdl = fitlm([nfc_tbl_aug.delPAD,nfc_tbl_aug.delPaero,nfc_tbl_aug.G,nfc_tbl_aug.delP_fan],nfc_tbl_aug.delP_true,'CategoricalVars','x3','RobustOpts','cauchy')
+mdl = fitlm([nfc_tbl_aug.delPAD,nfc_tbl_aug.delPaero,nfc_tbl_aug.set,nfc_tbl_aug.delP_fan],nfc_tbl_aug.delP_true,'y~x1+x2+x3*x1+x3*x2+x4','CategoricalVars','x3','RobustOpts','ols')
+
+
 
 %% relative results
 figure(2)
 clf
 hold on
-mdl = fitlm(nfc_tbl_aug.NPC_inf,nfc_tbl_aug.NPC_true,'RobustOpts','on');
-mdl.plotSlice
+mdl = fitlm([nfc_tbl_aug.NPC_inf,nfc_tbl_aug.set],nfc_tbl_aug.NPC_true,'y~x1*x2','CategoricalVars','x2','RobustOpts','on')
+mdl.plot
+mdl = fitlm([nfc_tbl_aug.NFC_inf,nfc_tbl_aug.set],nfc_tbl_aug.NFC_true,'y~x1*x2','CategoricalVars','x2','RobustOpts','on')
+mdl.plot
 
 
 %% mixed effects attempt (you need multiple membership modeling though)
