@@ -1,4 +1,4 @@
-function mdl = plotAbsPdiff(nfc_tbl_aug)
+function mdl = plotAbsPdiff(nfc_tbl_aug,eta)
 figure(1)
 set(gcf(),'Position',[445,351,825,420])
 set(gcf(),'Renderer','painters','RendererMode','manual')
@@ -9,7 +9,10 @@ try
 catch
     disp('MATLAB 2023b+ required for desired color palette')
 end
-eta = 0.306;
+if ~exist('eta','var')
+    eta = 0.366;
+    disp('********* Assuming eta=36.6% *********')
+end
 
 % tiledlayout(2,3)
 x = 3600*kappa(eta)*nfc_tbl_aug.delPAD/1000;xlin = linspace(min(x),max(x),15);

@@ -1,7 +1,10 @@
-function nfc_tbl_aug = process_nfc_tbl(nfc_tbl_aug,drr_model,P_AD_adjustment,use_wind)
-narginchk(3,4)
+function nfc_tbl_aug = process_nfc_tbl(nfc_tbl_aug,drr_model,P_AD_adjustment,use_wind,eta)
+narginchk(3,5)
 if ~exist('use_wind','var')
     use_wind=false;
+end
+if ~exist('eta','var')
+    eta=0.366;
 end
 % take in an augmented nfc table and add the normalized fuel consumption to
 % it
@@ -83,8 +86,8 @@ nfc_tbl_aug.delF_true = ...
 nfc_tbl_aug.NFC_inf = ...
     F_plat.T ./ ...
     ( F_plat.T +...
-    kappa()*((P_AD_ref+P_aero_ref.*DRR_ref) - (P_AD_plat + P_aero_plat.*DRR_plat)) );
+    kappa(eta)*((P_AD_ref+P_aero_ref.*DRR_ref) - (P_AD_plat + P_aero_plat.*DRR_plat)) );
 
 nfc_tbl_aug.delF_inf = ...
-    kappa()*(-(P_AD_ref+P_aero_ref.*DRR_ref) + (P_AD_plat + P_aero_plat.*DRR_plat));
+    kappa(eta)*(-(P_AD_ref+P_aero_ref.*DRR_ref) + (P_AD_plat + P_aero_plat.*DRR_plat));
 end

@@ -1,4 +1,4 @@
-function mdl = plotAbsPlanes(nfc_tbl_aug,fuel)
+function mdl = plotAbsPlanes(nfc_tbl_aug,eta)
 figure(1)
 set(gcf(),'Position',[445,351,825,420])
 % set(gcf(),'Renderer','painters','RendererMode','manual')
@@ -9,7 +9,7 @@ try
 catch
     disp('MATLAB 2023b+ required for desired color palette')
 end
-if exist('fuel','var')
+if exist('eta','var')
     eta = 0.306;
     x = kappa(eta)*nfc_tbl_aug.delPAD;
     y = kappa(eta)*nfc_tbl_aug.delPaero;
