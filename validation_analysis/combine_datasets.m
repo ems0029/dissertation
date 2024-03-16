@@ -4,7 +4,7 @@ global n
 n = [];
 % combine nfcs
 drr_method = 'schmid';
-pad_adjustment = 'none';
+pad_adjustment = 'rls';
 weather = true;
 eta = 0.306;
 addpath('.\functions\')
@@ -49,7 +49,7 @@ clf
 % nexttile
 hold on
 mdl = fitlm([nfc_tbl_aug.NFC_inf],nfc_tbl_aug.NFC_true,'y~x1','RobustOpts','off');
-mdl.plot
+mdl.plotAdded
 xlabel('NFC_{inferred}','Interpreter','tex')
 ylabel('NFC_{true}','Interpreter','tex')
 title('')

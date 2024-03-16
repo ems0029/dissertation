@@ -1,5 +1,5 @@
 clearvars
-load('..\lookups\tbl_jdsmc_3_4_2024.mat','tbl')
+load('..\lookups\tbl_jdsmc_3_16_2024.mat','tbl')
 
 %% make table
 nfc_tbl = grpstats(tbl,{'truck','numTrucks','lead_ctrl','follow_ctrl','westbound','ID'},"mean",'DataVars',{'runID','refID','engine_power','fuel_rate','P_AD_cadj','P_AD','P_AD_rls','P_aero','P_aero_wind','drag_reduction_ratio','drag_reduction_ratio_husseinpwr','drag_reduction_ratio_husseinrp','v','fan_power_est','mass_eff','wind_v','wind_v_veh','wind_yaw_veh','amb_density'})
@@ -33,7 +33,7 @@ end
 nfc_tbl_aug = vertcat(nfc_tbl_aug{:});
 nfc_tbl_aug = movevars(nfc_tbl_aug,"N_ref","After","N_plat");
 %% add NPC/NFC
-nfc_tbl_aug = process_nfc_tbl(nfc_tbl_aug,'husseinrp','cadj',true);
+nfc_tbl_aug = process_nfc_tbl(nfc_tbl_aug,'schmid','cadj',true);
 
 scatter(nfc_tbl_aug.NPC_inf,nfc_tbl_aug.NPC_true,'filled')
 fitlm([nfc_tbl_aug.NPC_inf-1,nfc_tbl_aug.G],nfc_tbl_aug.NPC_true-1,'CategoricalVars','x2')

@@ -1,7 +1,8 @@
 function a_rls = RLS(subtbl,lambda,p)
 % take in a subtable with acceleration estimate and 
-a_mdl = fillmissing(subtbl.a_modeled_w_drr,"nearest");
-a_est = fillmissing(subtbl.a_estimate,"nearest");
+a_mdl = subtbl.a_modeled_w_drr;
+a_est = subtbl.a_estimate;
+skip  = ismissing(a_est)|ismissing(a_mdl);
 
 if ~exist('p','var')
     p=1;
@@ -17,6 +18,9 @@ P = eye(p+1)*del; %pxp
 for q = 1:height(subtbl)
     if p > 1
         x(3:p+1) = x(2:p); % shift out old measurement
+    end
+    if skip(q)
+        continue
     end
     x(2) = a_mdl(q);
     if all(~(subtbl.decel_on(max(1,q-del_B):q)))

@@ -1,5 +1,5 @@
 clearvars
-load('..\lookups\tbl_I85_3_4_2024.mat','tbl')
+load('..\lookups\tbl_I85_3_16_2024.mat','tbl')
 
 tbl_trim = tbl(tbl.east>-30000&tbl.east<-1000,:);
 
@@ -49,7 +49,7 @@ end
 nfc_tbl_aug = vertcat(nfc_tbl_aug{:});
 nfc_tbl_aug = movevars(nfc_tbl_aug,"N_ref","After","N_plat");
 %% add NPC/NFC
-nfc_tbl_aug = process_nfc_tbl(nfc_tbl_aug,'husseinrp','none',false);
+nfc_tbl_aug = process_nfc_tbl(nfc_tbl_aug,'husseinrp','rls',false);
 
 scatter(nfc_tbl_aug.NPC_inf,nfc_tbl_aug.NPC_true,'filled')
 fitlm([nfc_tbl_aug.NPC_inf-1,nfc_tbl_aug.G],nfc_tbl_aug.NPC_true-1,'CategoricalVars','x2')
