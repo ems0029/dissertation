@@ -1,9 +1,9 @@
-clearvars
+clearvars;close all
 drr_method = {'schmid','husseinrp','husseinpwr'};
 pad_adjustment = {'none','rls','cadj'};
 weather = {false};
-eta = 0.306;
-robust = 'off';
+eta = 0.322;
+robust = 'on';
 fSet = @(tbl) ones(height(tbl),1);
 
 addpath('.\functions\')
@@ -27,18 +27,20 @@ for q=1:3
         nfc_tbl_aug(nfc_tbl_aug.ID_plat==160,:)=[];
         nfc_tbl_aug(nfc_tbl_aug.ID_ref==160,:)=[];
 
-        mdl_Pdiff_{q,qq,qqq} = fitlm(nfc_tbl_aug,'delP_true~delPAD*set+delPaero*set+delP_fan*set-set',RobustOpts=robust);
-        mdl_Fdiff_{q,qq,qqq} = fitlm(nfc_tbl_aug,'delF_true~delFAD*set+delFaero*set+delF_fan*set-set',RobustOpts=robust);
-        mdl_Pdiff{q,qq,qqq} = fitlm(nfc_tbl_aug,'delP_true~delP_inf*set-set',RobustOpts=robust);
-        mdl_Fdiff{q,qq,qqq} = fitlm(nfc_tbl_aug,'delF_true~delF_inf*set',RobustOpts=robust);
-        mdl_NPC{q,qq,qqq} = fitlm(nfc_tbl_aug,'NPC_true~NPC_inf*set-set',RobustOpts=robust);
-        mdl_NFC{q,qq,qqq} = fitlm(nfc_tbl_aug,'NFC_true~NFC_inf*set-set',RobustOpts=robust);
+        mdl_Pdiff_{q,qq,qqq} = fitlm(nfc_tbl_aug,'delP_true~delPAD+delPaero+delP_fan',RobustOpts=robust);
+        mdl_Fdiff_{q,qq,qqq} = fitlm(nfc_tbl_aug,'delF_true~delFAD+delFaero+delF_fan',RobustOpts=robust);
+        mdl_Pdiff{q,qq,qqq} = fitlm(nfc_tbl_aug,'delP_true~delP_inf',RobustOpts=robust);
+        mdl_Fdiff{q,qq,qqq} = fitlm(nfc_tbl_aug,'delF_true~delF_inf',RobustOpts=robust);
+        mdl_NPC{q,qq,qqq} = fitlm(nfc_tbl_aug,'NPC_true~NPC_inf',RobustOpts=robust);
+        mdl_NFC{q,qq,qqq} = fitlm(nfc_tbl_aug,'NFC_true~NFC_inf',RobustOpts=robust);
 
+        end
     end
-end
 end
 
 %% various coefficients
+Rq_P_=cellfun(@(x) x.Rsquared.Ordinary,mdl_Pdiff_)
+Rq_F_=cellfun(@(x) x.Rsquared.Ordinary,mdl_Fdiff_)
 Rq_P=cellfun(@(x) x.Rsquared.Ordinary,mdl_Pdiff)
 Rq_F=cellfun(@(x) x.Rsquared.Ordinary,mdl_Fdiff)
 Rq_NPC=cellfun(@(x) x.Rsquared.Ordinary,mdl_NPC)
@@ -65,12 +67,16 @@ betaNPC=cellfun(@(x) x.Coefficients.Estimate(end),mdl_NPC,'UniformOutput',true)
 betaNFC=cellfun(@(x) x.Coefficients.Estimate(end),mdl_NFC,'UniformOutput',true)
 SE_NPC=cellfun(@(x) x.Coefficients.SE(end),mdl_NPC,'UniformOutput',true)
 SE_NFC=cellfun(@(x) x.Coefficients.SE(end),mdl_NFC,'UniformOutput',true)
+beta0NPC=cellfun(@(x) x.Coefficients.Estimate(1),mdl_NPC,'UniformOutput',true)
+beta0NFC=cellfun(@(x) x.Coefficients.Estimate(1),mdl_NFC,'UniformOutput',true)
+SE0_NPC=cellfun(@(x) x.Coefficients.pValue(1),mdl_NPC,'UniformOutput',true)
+SE0_NFC=cellfun(@(x) x.Coefficients.pValue(1),mdl_NFC,'UniformOutput',true)
 
 round(reshape([[betaP_diff;SE_P_diff*1.96],[betaF_diff;SE_F_diff*1.96]],3,[])*100,1)
 round(reshape([[betaNPC;SE_NPC*1.96],[betaNFC;SE_NFC*1.96]],3,[])*100,1)
 
 fSum = @(x) [[x;mean(x,1)],[mean(x,2);mean(mean(x,1))]];
-fSum(betaNPC)
+fSum(Rq_P)
 fSum(betaNFC)
 
 % NONE does better than cadj

@@ -10,7 +10,6 @@ catch
     disp('MATLAB 2023b+ required for desired color palette')
 end
 if exist('eta','var')
-    eta = 0.306;
     x = kappa(eta)*nfc_tbl_aug.delPAD;
     y = kappa(eta)*nfc_tbl_aug.delPaero;
     xlin = linspace(min(x),max(x),15);
@@ -32,7 +31,7 @@ else
     zlstr="\DeltaP_{true} [kW]";
 end
 tiledlayout(2,2,'Padding','loose','TileSpacing','tight')
-mdl = fitlm([x,y,nfc_tbl_aug.set],z,'y~x1+x2+x3*x1+x3*x2-x3','CategoricalVars','x3','RobustOpts','ols');
+mdl = fitlm([x,y,nfc_tbl_aug.set],z,'y~x1+x2+x3*x1+x3*x2-x3','CategoricalVars','x3','RobustOpts','on');
 % nexttile([2 2])
 for q = 1:4
     ax(q) =nexttile;
@@ -62,5 +61,5 @@ end
 %     sprintf('\n\n\\bfFitted Response (OLS):\\rm\n\\DeltaP_{true}\\sim%.2f+%.2f\\DeltaP_{AD}+%.2f\\DeltaP_{aero}\n R^2=%.3f',mdl.Coefficients.Estimate,  mdl.Rsquared.Ordinary), ...
 %     sprintf('\n\\bf1:1 Plane\n\\rm\\DeltaP_{true}\\sim\\DeltaP_{AD}+\\DeltaP_{aero}')},"Location","eastoutside")
 
-set(gca(),"FontSize",10)
+set(gcf().Children(2).Children,"FontSize",10)
 end
