@@ -27,8 +27,8 @@ for q=1:3
         nfc_tbl_aug(nfc_tbl_aug.ID_plat==160,:)=[];
         nfc_tbl_aug(nfc_tbl_aug.ID_ref==160,:)=[];
 
-        mdl_Pdiff_{q,qq,qqq} = fitlm(nfc_tbl_aug,'delP_true~delPAD+delPaero+delP_fan',RobustOpts=robust);
-        mdl_Fdiff_{q,qq,qqq} = fitlm(nfc_tbl_aug,'delF_true~delFAD+delFaero+delF_fan',RobustOpts=robust);
+        mdl_Pdiff_{q,qq,qqq} = fitlm(nfc_tbl_aug,'delP_true~delPAD+delPaero',RobustOpts=robust);
+        mdl_Fdiff_{q,qq,qqq} = fitlm(nfc_tbl_aug,'delF_true~delFAD+delFaero',RobustOpts=robust);
         mdl_Pdiff{q,qq,qqq} = fitlm(nfc_tbl_aug,'delP_true~delP_inf',RobustOpts=robust);
         mdl_Fdiff{q,qq,qqq} = fitlm(nfc_tbl_aug,'delF_true~delF_inf',RobustOpts=robust);
         mdl_NPC{q,qq,qqq} = fitlm(nfc_tbl_aug,'NPC_true~NPC_inf',RobustOpts=robust);
