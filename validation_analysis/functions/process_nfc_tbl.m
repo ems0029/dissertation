@@ -9,7 +9,8 @@ end
 % take in an augmented nfc table and add the normalized fuel consumption to
 % it
 rng('default')
-flip = (-0.5+(rand(height(nfc_tbl_aug),1)>=0.5))*2;
+cond = rand(height(nfc_tbl_aug),1)>=0.5
+flip = (-0.5+(cond))*2;
 
 %% power
 P_plat.T = nfc_tbl_aug.mean_engine_power_T_plat;
