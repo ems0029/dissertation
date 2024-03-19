@@ -3,7 +3,7 @@ clearvars
 drr_method = 'schmid';
 pad_adjustment = 'cadj';
 weather = false;
-eta = 0.306;
+eta = 0.322;
 addpath('.\functions\')
 fSet = @(tbl) ones(height(tbl),1);
 
@@ -46,7 +46,7 @@ figure(3)
 clf
 % nexttile
 hold on
-mdl = fitlm([nfc_tbl_aug.delF_inf],nfc_tbl_aug.delF_true,'y~x1','RobustOpts','on');
+mdl = fitlm(nfc_tbl_aug,'NPC_true~NPC_inf*truck_plat','RobustOpts','on');
 mdl.plot
 xlabel('\DeltaF_{inferred} [L/hr]','Interpreter','tex')
 ylabel('\DeltaF_{true} [L/hr]','Interpreter','tex')
