@@ -6,7 +6,6 @@ weather = false;
 eta = 0.322;
 addpath('.\functions\')
 fSet = @(tbl) ones(height(tbl),1);
-
 % load and merge tables
 table_1 = process_nfc_tbl(load("./lookups/nfc_tbl_aug_doe.mat",'nfc_tbl_aug').nfc_tbl_aug, drr_method, pad_adjustment, weather,eta);
 table_2 = process_nfc_tbl(load("./lookups/nfc_tbl_aug_canada.mat",'nfc_tbl_aug').nfc_tbl_aug, drr_method, pad_adjustment, weather,eta);
@@ -16,6 +15,7 @@ table_1.set = (1*fSet(table_1));
 table_2.set = (2*fSet(table_2));
 table_3.set = (3*fSet(table_3));
 table_4.set = (4*fSet(table_4));
+
 nfc_tbl_aug = merge_tables(merge_tables(merge_tables(table_1,table_2),table_3),table_4);
 
 %% a couple of outliers
@@ -95,17 +95,10 @@ exportgraphics(figure(2),'C:\Users\ems0029\Box\Advanced Powertrain Group\Platoon
 exportgraphics(figure(2),'C:\Users\ems0029\Box\Advanced Powertrain Group\Platooning\Evan Stegner Dissertation\New Graphics\NFC_and_NPC_experimental_rep_res.png','Resolution',300)
 %% mixed effects attempt (you need multiple membership modeling though)
 % this is really hard to visualize and encode...
-% C = unique([nfc_tbl_aug.G,nfc_tbl_aug.N_plat;nfc_tbl_aug.G,nfc_tbl_aug.N_ref],'rows')
-% [~,nfc_tbl_aug.q_plat]=ismember([nfc_tbl_aug.G,nfc_tbl_aug.N_plat],C,'rows');
-% [~,nfc_tbl_aug.q_ref]=ismember([nfc_tbl_aug.G,nfc_tbl_aug.N_ref],C,'rows');
+C = unique([nfc_tbl_aug.G,nfc_tbl_aug.N_plat;nfc_tbl_aug.G,nfc_tbl_aug.N_ref],'rows')
+[~,nfc_tbl_aug.q_plat]=ismember([nfc_tbl_aug.G,nfc_tbl_aug.N_plat],C,'rows');
+[~,nfc_tbl_aug.q_ref]=ismember([nfc_tbl_aug.G,nfc_tbl_aug.N_ref],C,'rows');
 % % dumb dummies
 % mdl = fitlm([nfc_tbl_aug.delPAD,nfc_tbl_aug.delPaero,nfc_tbl_aug.q_ref,nfc_tbl_aug.q_plat],nfc_tbl_aug.delP_true,'CategoricalVars',{'x3','x4'})
 % % what is the output?
 % fitlme(nfc_tbl_aug,'delP_true~delPaero+delPAD+(1|q_plat)+(1|q_ref)')
-
-
-function merged_table = merge_tables(table_1,table_2)
-   table_2.G = table_2.G+max(table_1.G);
-   commonvars = intersect(table_1.Properties.VariableNames,table_2.Properties.VariableNames,'stable');
-   merged_table = [table_1(:,commonvars);table_2(:,commonvars)];
-end

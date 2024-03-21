@@ -120,9 +120,3 @@ cellfun(@(x) refline(x.Coefficients.Estimate(end),x.Coefficients.Estimate(1)).se
 refline(1).set('color','k','Linewidth',3,'LineStyle','--')
 xlim([0.5,1.5]);ylim([0.5,1.5])
 grid on
-
-function merged_table = merge_tables(table_1,table_2)
-table_2.G = table_2.G+max(table_1.G);
-commonvars = intersect(table_1.Properties.VariableNames,table_2.Properties.VariableNames,'stable');
-merged_table = [table_1(:,commonvars);table_2(:,commonvars)];
-end
