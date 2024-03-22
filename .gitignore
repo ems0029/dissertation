@@ -63,3 +63,8 @@ validation_analysis/lookups/tbl_doeTestTrack_3_5_2024.mat
 validation_analysis/lookups/tbl_I85_3_16_2024.mat
 validation_analysis/lookups/tbl_jdsmc_3_16_2024.mat
 .Rproj.user
+validation_analysis/mixed_model/.RDataTmp
+validation_analysis/mixed_model/.Rhistory
+validation_analysis/mixed_model/nfc_tbl_mixed.mat
+validation_analysis/mixed_model/nfc_tbl_mixed_justDOE.mat
+validation_analysis/mixed_model/.RData

@@ -52,6 +52,7 @@ rocmetrics(y_true_test,[y_hat_score_test_lr],[1]).plot
 
 trainMetrics = rocmetrics(y_true_train,[1-y_hat_score_train_lr,y_hat_score_train_lr],[0,1]).Metrics
 testMetrics  = rocmetrics(y_true_test, [1-y_hat_score_test_lr,y_hat_score_test_lr],[0,1]).Metrics
+i=1
 
 [l_bound,u_bound]=twoSidedMaybe(rocmetrics(y_true_train,[1-y_hat_score_train_lr],[0]).Metrics, ...
     rocmetrics(y_true_train,[y_hat_score_train_lr],[1]).Metrics, ...
@@ -79,9 +80,6 @@ nexttile
 confusionchart(confusionmat((y_true_test), ...
     (y_hat_score_test_lr>0.5)) ...
     ,{'do not platoon','platoon'},'RowSummary','off','ColumnSummary','total-normalized')
+title('TEST')
 
 
-function [l_bound, u_bound] = twoSidedMaybe(zeroclass,oneclass,alpha)
-    l_bound = 1-(zeroclass.Threshold(find(zeroclass.FalsePositiveRate<alpha,1,"last")));
-    u_bound = (oneclass.Threshold(find(oneclass.FalsePositiveRate<alpha,1,"last")));
-end
