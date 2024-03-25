@@ -8,7 +8,7 @@ nfc_tbl = grpstats(tbl,{'year','truck','numTrucks','spacing','ID'},"mean", ...
     'drag_reduction_ratio_husseinpwr','drag_reduction_ratio_husseinrp', ...
     'v','fan_power_est','mass_eff'});
 nfc_tbl.trip_time = grpstats(tbl,{'year','truck','numTrucks','spacing','ID'},"range",'DataVars',{'time'}).range_time;
-
+nfc_tbl.bsln = any(lower(nfc_tbl.numTrucks)=={'baseline','nmpc_cruise'},2);
 %% put into standard format
 
 % need the group, in-group ID, test, control (fuel and power), braking (*3),
@@ -42,8 +42,9 @@ end
 
 nfc_tbl_aug = vertcat(nfc_tbl_aug{:});
 nfc_tbl_aug = movevars(nfc_tbl_aug,"N_ref","After","N_plat");
+
 %% add NPC/NFC
-nfc_tbl_aug = process_nfc_tbl(nfc_tbl_aug,'husseinrp','none',false);
+nfc_tbl_aug = process_nfc_tbl(nfc_tbl_aug,'schmid','rls',false);
 
 scatter(nfc_tbl_aug.NPC_inf,nfc_tbl_aug.NPC_true,'filled')
 fitlm([nfc_tbl_aug.NPC_inf-1,nfc_tbl_aug.G],nfc_tbl_aug.NPC_true-1,'CategoricalVars','x2')

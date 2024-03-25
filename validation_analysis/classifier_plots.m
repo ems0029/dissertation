@@ -16,8 +16,8 @@ for q=0.001:0.01:0.3
     i=i+1
     end
 end
-Ut(Ut<.50)=.5
-Lt(Lt>0.5)=.5
+Ut(Ut<.50)=.5;
+Lt(Lt>0.5)=.5;
 clf
 hold on
 colormap gray
@@ -38,7 +38,7 @@ xlabel('Confidence Level')
 ylabel('Estimated Probability')
 xlim([71 99.9])
 
-% plot((1-[p])*100,[L;(U)]'*100,'-k');
+% plot((1-[p])*100,[Lt;(Ut)]'*100,'-k');
 % grid on
 
 
@@ -56,10 +56,3 @@ b=annotation('textbox',[0.23,0.48,0.2,0.2],'String','Maybe','BackgroundColor',va
 c=annotation('textbox',[0.53,0.23,0.2,0.2],'String','Do Not Platoon','BackgroundColor',validatecolor("#ff4c42"))
 set([a,b,c],'FaceAlpha',0.5,'HorizontalAlignment','center','fitboxtotext',true,'edgecolor','none','VerticalAlignment','baseline')
 
-%% sigmoid plot
-
-clf
-figure;plot([0.5:0.01:1.5],logreg.predict([0.5:0.01:1.5]'))
-
-meshgrid([0.5:0.01:1.5],)
-f(U),f(L)

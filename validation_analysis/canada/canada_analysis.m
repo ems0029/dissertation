@@ -12,6 +12,7 @@ nfc_tbl = grpstats(tbl,{'truck','numTrucks','spacing','ID'},"mean",'DataVars', .
     'wind_v_veh','wind_yaw_veh','amb_density','engine_power_C','fuel_rate_C'});
 nfc_tbl.trip_time = grpstats(tbl,{'truck','numTrucks','spacing','ID'},"range", ...
     'DataVars',{'time'}).range_time;
+nfc_tbl.bsln = any(lower(nfc_tbl.numTrucks)=={'rf'},2);
 
 %% T/C format
 % while the table already contain T and C information, doing this the same

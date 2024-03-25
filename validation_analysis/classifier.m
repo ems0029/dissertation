@@ -23,7 +23,7 @@ title("T14")
 
 %% Split into test and train
 train = nfc_tbl_aug(any(nfc_tbl_aug.set==[1],2),:);
-test  = nfc_tbl_aug(any(nfc_tbl_aug.set==[2,3,4],2),:);
+test  = nfc_tbl_aug(any(nfc_tbl_aug.set==[3,4],2),:);
 logreg=fitglm([train.NFC_inf],train.NFC_true<1,'Distribution','binomial');
 [~,ci]=fitlm([train.NFC_inf],train.NFC_true,'RobustOpts','on').predict('prediction','observation');
 % forest=fitctree([train.NFC_inf],train.NFC_true<1,"OptimizeHyperparameters","auto");
@@ -56,7 +56,8 @@ i=1
 
 [l_bound,u_bound]=twoSidedMaybe(rocmetrics(y_true_train,[1-y_hat_score_train_lr],[0]).Metrics, ...
     rocmetrics(y_true_train,[y_hat_score_train_lr],[1]).Metrics, ...
-    0.1);clf
+    0.1);
+figure(2);clf
 tiledlayout(1,2,'TileSpacing','tight',Padding='compact',TileIndexing='rowmajor')
 nexttile
 confusionchart(confusionmat(double(y_true_train), ...
