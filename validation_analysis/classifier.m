@@ -56,7 +56,7 @@ i=1
 
 [l_bound,u_bound]=twoSidedMaybe(rocmetrics(y_true_train,[1-y_hat_score_train_lr],[0]).Metrics, ...
     rocmetrics(y_true_train,[y_hat_score_train_lr],[1]).Metrics, ...
-    0.1);
+    0.05);
 figure(2);clf
 tiledlayout(1,2,'TileSpacing','tight',Padding='compact',TileIndexing='rowmajor')
 nexttile

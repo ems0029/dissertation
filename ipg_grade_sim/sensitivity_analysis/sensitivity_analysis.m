@@ -99,13 +99,24 @@ NPC_inf = vertcat(NPC_inf{:});
 %% aero errors
 figure(1)
 clf
+tiledlayout('flow')
+nexttile
 hold on
 plot(100*aero_offset./10,100*(cellfun(@(x) x,P_aero_inf(:,1))-P_aero_true)./P_aero_true,'.','DisplayName','P_{aero}')
-plot(100*aero_offset./10,100*(cellfun(@(x) x(1),P_AD_inf(:,1),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - RLS')
-plot(100*aero_offset./10,100*(cellfun(@(x) x(2),P_AD_inf(:,1),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - Constant Offset')
-plot(100*aero_offset./10,100*(cellfun(@(x) x(1),NPC_inf(:,1),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - RLS')
-plot(100*aero_offset./10,100*(cellfun(@(x) x(2),NPC_inf(:,1),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - Constant Offset')
-legend('Location','northwest')
+plot(100*aero_offset./10,100*(cellfun(@(x) x(1),P_AD_inf(:,1),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - Unadjusted')
+plot(100*aero_offset./10,100*(cellfun(@(x) x(2),P_AD_inf(:,1),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - RLS')
+plot(100*aero_offset./10,100*(cellfun(@(x) x(3),P_AD_inf(:,1),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - Constant Offset')
+legend('Location','southwest')
+xtickformat('percentage')
+ytickformat('percentage')
+xlabel('Error in C_dA_f')
+ylabel('Error in Inferred Value')
+nexttile
+hold on
+plot(100*aero_offset./10,100*(cellfun(@(x) x(1),NPC_inf(:,1),'uniformoutput',true)-NPC_true)./NPC_true,'.','DisplayName','NPC - Unadjusted')
+plot(100*aero_offset./10,100*(cellfun(@(x) x(2),NPC_inf(:,1),'uniformoutput',true)-NPC_true)./NPC_true,'.','DisplayName','NPC - RLS')
+plot(100*aero_offset./10,100*(cellfun(@(x) x(3),NPC_inf(:,1),'uniformoutput',true)-NPC_true)./NPC_true,'.','DisplayName','NPC - Constant Offset')
+legend('Location','southwest')
 xtickformat('percentage')
 ytickformat('percentage')
 xlabel('Error in C_dA_f')
@@ -114,12 +125,23 @@ ylabel('Error in Inferred Value')
 %% RR errors
 figure(2)
 clf
+tiledlayout('flow')
+nexttile
 hold on
-scatter(100*rr_offset./0.01,100*(cellfun(@(x) x, P_aero_inf(:,2))-P_aero_true)./P_aero_true,'.','DisplayName','P_{aero}','MarkerFaceAlpha',0.5)
-scatter(100*rr_offset./0.01,100*(cellfun(@(x) x(1),P_AD_inf(:,2),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - RLS')
-% plot(100*rr_offset./0.01,100*(cellfun(@(x) x(2),P_AD_inf(:,2),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - Constant Offset')
-scatter(100*rr_offset./0.01,100*(cellfun(@(x) x(1), NPC_inf(:,2),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - RLS')
-% plot(100*rr_offset./0.01,100*(cellfun(@(x) x(2), NPC_inf(:,2),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - Constant Offset')
+plot(100*rr_offset./0.01,100*(cellfun(@(x) x,P_aero_inf(:,2))-P_aero_true)./P_aero_true,'.','DisplayName','P_{aero}')
+plot(100*rr_offset./0.01,100*(cellfun(@(x) x(1),P_AD_inf(:,2),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - Unadjusted')
+plot(100*rr_offset./0.01,100*(cellfun(@(x) x(2),P_AD_inf(:,2),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - RLS')
+plot(100*rr_offset./0.01,100*(cellfun(@(x) x(3),P_AD_inf(:,2),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - Constant Offset')
+legend('Location','best')
+xtickformat('percentage')
+ytickformat('percentage')
+xlabel('Error in C_{rr}')
+ylabel('Error in Inferred Value')
+nexttile
+hold on
+plot(100*rr_offset./0.01,100*(cellfun(@(x) x(1),NPC_inf(:,2),'uniformoutput',true)-NPC_true)./NPC_true,'.','DisplayName','NPC - Unadjusted')
+plot(100*rr_offset./0.01,100*(cellfun(@(x) x(2),NPC_inf(:,2),'uniformoutput',true)-NPC_true)./NPC_true,'.','DisplayName','NPC - RLS')
+plot(100*rr_offset./0.01,100*(cellfun(@(x) x(3),NPC_inf(:,2),'uniformoutput',true)-NPC_true)./NPC_true,'.','DisplayName','NPC - Constant Offset')
 legend('Location','best')
 xtickformat('percentage')
 ytickformat('percentage')
@@ -129,12 +151,23 @@ ylabel('Error in Inferred Value')
 %% mass errors
 figure(3)
 clf
+tiledlayout('flow')
+nexttile
 hold on
-plot(100*mass_offset./mass_true',100*(cellfun(@(x) x, P_aero_inf(:,3))-P_aero_true)./P_aero_true,'.','DisplayName','P_{aero}')
-plot(100*mass_offset./mass_true',100*(cellfun(@(x) x(1),P_AD_inf(:,3),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - RLS')
-plot(100*mass_offset./mass_true',100*(cellfun(@(x) x(2),P_AD_inf(:,3),'uniformoutput',true)-P_AD_true)./P_AD_true,'.','DisplayName','P_{AD} - Constant Offset')
-plot(100*mass_offset./mass_true',100*(cellfun(@(x) x(1), NPC_inf(:,3),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - RLS')
-plot(100*mass_offset./mass_true',100*(cellfun(@(x) x(2), NPC_inf(:,3),'uniformoutput',true)-NPC_true),'.','DisplayName','NPC - Constant Offset')
+scatter(100*mass_offset./mass_true,100*(cellfun(@(x) x, P_aero_inf(:,3))-P_aero_true)./P_aero_true,'o','DisplayName','P_{aero}')
+scatter(100*mass_offset./mass_true,100*(cellfun(@(x) x(1),P_AD_inf(:,3),'uniformoutput',true)-P_AD_true)./P_AD_true,'o','DisplayName','P_{AD} - Unadjusted')
+scatter(100*mass_offset./mass_true,100*(cellfun(@(x) x(2),P_AD_inf(:,3),'uniformoutput',true)-P_AD_true)./P_AD_true,'o','DisplayName','P_{AD} - RLS')
+scatter(100*mass_offset./mass_true,100*(cellfun(@(x) x(3),P_AD_inf(:,3),'uniformoutput',true)-P_AD_true)./P_AD_true,'o','DisplayName','P_{AD} - Constant Offset')
+legend('Location','best')
+xtickformat('percentage')
+ytickformat('percentage')
+xlabel('Error in Mass')
+ylabel('Error in Inferred Value')
+nexttile
+hold on
+scatter(100*mass_offset./mass_true,100*(cellfun(@(x) x(1), NPC_inf(:,3),'uniformoutput',true)-NPC_true),'o','DisplayName','NPC - Unadjusted')
+scatter(100*mass_offset./mass_true,100*(cellfun(@(x) x(2), NPC_inf(:,3),'uniformoutput',true)-NPC_true),'o','DisplayName','NPC - RLS')
+scatter(100*mass_offset./mass_true,100*(cellfun(@(x) x(3), NPC_inf(:,3),'uniformoutput',true)-NPC_true),'o','DisplayName','NPC - Constant Offset')
 legend('Location','best')
 xtickformat('percentage')
 ytickformat('percentage')

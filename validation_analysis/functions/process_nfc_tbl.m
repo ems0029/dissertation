@@ -9,7 +9,7 @@ end
 % take in an augmented nfc table and add the normalized fuel consumption to
 % it
 %% remove baseline compares
-nfc_tbl_aug(nfc_tbl_aug.bsln_plat&nfc_tbl_aug.bsln_ref,:)=[];
+% nfc_tbl_aug(nfc_tbl_aug.bsln_plat&nfc_tbl_aug.bsln_ref,:)=[];
 
 rng('default')
 flip = (-0.5+(rand(height(nfc_tbl_aug),1)>=0.5))*2;

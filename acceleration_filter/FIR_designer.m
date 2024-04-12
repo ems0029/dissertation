@@ -6,8 +6,8 @@ subtbl=tbl(tbl.ID==100,:);
 
 addpath('..\functions\')
 addpath('..\lookups\truck_params\')
-for q = 1
-    for qq = 1:25
+for q = 48
+    for qq = 14
         firf = designfilt('lowpassfir','FilterOrder',qq*2-1, ...
             'CutoffFrequency',q/40,'SampleRate',10);
         a_num=diff(subtbl.v_noise)*10; % 0.5 samples late

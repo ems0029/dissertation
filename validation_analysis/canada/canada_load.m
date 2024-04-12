@@ -86,5 +86,5 @@ end
 tblArr = tblArr(cellfun(@(x) ~isempty(x),(tblArr)));
 tbl_all = vertcat(tblArr{:});
 
-tbl_all.P_aero = 0.5*5.5*1.225.*(tbl_all.v).^2.*tbl_all.v;
-tbl_all.P_aero_wind = 0.5*5.5.*tbl_all.amb_density.*(tbl_all.wind_v_veh).^2.*tbl_all.v;
+tbl_all.P_aero = 0.5*5.0*1.225.*(tbl_all.v).^2.*tbl_all.v;
+tbl_all.P_aero_wind = 0.5*5.0.*tbl_all.amb_density.*(tbl_all.wind_v_veh).^2.*tbl_all.v;
