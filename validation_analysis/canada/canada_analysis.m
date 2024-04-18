@@ -1,4 +1,5 @@
 clearvars
+addpath('..\functions\')
 tbl = load('..\lookups\tbl_canada_3_5_2024.mat','tbl_all').tbl_all;
 
 tbl.engine_power_C = 22.371*pi/30*tbl.engine_pct_tq_NRC_subtbl.*tbl.engine_speed_NRC_subtbl;

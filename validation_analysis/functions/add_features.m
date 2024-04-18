@@ -1,25 +1,31 @@
-function subtbl = add_features(subtbl,param_path,trim)    
+function subtbl = add_features(subtbl,param_path,trim,old_a_estimate)
 % add_features
 % Adaptation of F:\other_scripts_2021\SAE_2023_utils\feature_engineering\splitApplyAccel_experimental.m
-% this script appends estimated acceleration, modeled acceleration, 
+% this script appends estimated acceleration, modeled acceleration,
 % and deceleration, including the Deceleration power/energy loss to each unique run ID
 
-narginchk(2,3)
+narginchk(2,4)
 
 addpath F:\other_scripts_2021\SAE_2023_utils\feature_engineering\
 
 %% trim the table
 %TODO make an input index
 if ~exist('trim','var')
-disp('using whole dataset')
+    disp('using whole dataset')
 else
-    subtbl = subtbl(trim,:); 
+    subtbl = subtbl(trim,:);
 end
+
+if ~exist('old_a_estimate','var')
+    disp('using new fir')
+    old_a_estimate = false;
+end
+
 
 %% vehicle offset
 if sum(isnan('drtk_v2v_dist'))~=height(subtbl)
     v2v_rpv_offset = nanmedian(subtbl.drtk_v2v_dist-subtbl.range_estimate);
-    subtbl.range_estimate_drtk = subtbl.drtk_v2v_dist-v2v_rpv_offset;         
+    subtbl.range_estimate_drtk = subtbl.drtk_v2v_dist-v2v_rpv_offset;
 end
 
 
@@ -30,9 +36,11 @@ subtbl = getFanOnConsumption(subtbl);
 
 %% acceleration estimate per Chen, 2007
 
-% tbl.a_estimate = fKalmanFiltSpeed(tbl.time,tbl.v,3.0,0);
-subtbl.a_estimate = get_fir_accel(subtbl);
-
+if old_a_estimate
+    subtbl.a_estimate = fKalmanFiltSpeed(subtbl.time,subtbl.v,3.0,0);
+else
+    subtbl.a_estimate = get_fir_accel(subtbl);
+end
 % the above will create some nans
 
 %% DRR ratio per Schmid
