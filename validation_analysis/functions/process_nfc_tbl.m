@@ -1,10 +1,13 @@
-function nfc_tbl_aug = process_nfc_tbl(nfc_tbl_aug,drr_model,P_AD_adjustment,use_wind,eta)
-narginchk(3,5)
+function nfc_tbl_aug = process_nfc_tbl(nfc_tbl_aug,drr_model,P_AD_adjustment,use_wind,eta,only_mode)
+narginchk(3,6)
 if ~exist('use_wind','var')
     use_wind=false;
 end
 if ~exist('eta','var')
     eta=0.366;
+end
+if ~exist('only_mode','var')
+    only_mode=false;
 end
 % take in an augmented nfc table and add the normalized fuel consumption to
 % it
@@ -12,7 +15,9 @@ end
 % nfc_tbl_aug(nfc_tbl_aug.bsln_plat&nfc_tbl_aug.bsln_ref,:)=[];
 
 rng('default')
-flip = (-0.5+(rand(height(nfc_tbl_aug),1)>=0.5))*2;
+cond = nfc_tbl_aug.mean_P_AD_T_ref<nfc_tbl_aug.mean_P_AD_T_plat;
+flip = (-0.5+(cond))*2;
+% flip = (-0.5+(rand(height(nfc_tbl_aug),1)>=0.5));
 nfc_tbl_aug.flip = flip;
 
 %% power
@@ -62,6 +67,21 @@ else
     P_aero_ref = nfc_tbl_aug.mean_P_aero_T_ref;
 end
 
+switch only_mode
+    case 'plat'
+        DRR_ref=0*DRR_ref+1;
+        P_AD_ref = 0*P_AD_ref;
+        P_aero_ref = P_aero_plat;
+    case 'ref'
+        DRR_plat=0*DRR_plat+1;
+        P_AD_plat = 0*P_AD_plat;
+        P_aero_plat = P_aero_ref;
+    case 'brake'
+        DRR_plat=0*DRR_plat+1;
+        DRR_ref=0*DRR_ref+1;
+    otherwise
+        % do nothing
+end
 
 nfc_tbl_aug.NPC_true = ... 
     (( P_plat.T ./ P_plat.C )./... %TC plat

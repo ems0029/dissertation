@@ -1,6 +1,7 @@
 function [x_int] = time_align(x_chars,data,t)
 % x_chars is a character vector to a topic from data, eg
 % 'j1939.vehicle_speed.wheelBasedSpeed'
+% Note from the author: I used eval. I am sorry.
 try
     x_vals = eval(['data.',x_chars]);
     t_chars = ['data.',x_chars(1:max(find(x_chars=='.'))),'time'];
