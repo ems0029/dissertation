@@ -39,6 +39,7 @@ for q = 1:3
             npc1 =1./(process_nfc_tbl(nfc_tbl_aug,drr{q},pad{qq},weather{qqq},0.322,'plat').NPC_inf);
             npc2 =(process_nfc_tbl(nfc_tbl_aug,drr{q},pad{qq},weather{qqq},0.322,'ref').NPC_inf);
             mu(q,qq,qqq) = mean(npc);
+            
             [~,~,ci]=ttest(npc);
             bnd(q,qq,qqq) = ci(2)-mu(q,qq,qqq);
             
@@ -53,7 +54,7 @@ for q = 1:3
     end
 end
 figure(1);clf
-tiledlayout(2,1,'TileSpacing','compact','Padding','compact')
+tiledlayout(3,1,'TileSpacing','compact','Padding','compact')
 nexttile
 appLayout(mu1, bnd1, [0.881 0.905],true);
 title('Platoon, 23m IVD')
@@ -62,13 +63,13 @@ nexttile
 appLayout(mu2, bnd2, [0.972 1.008],true);
 title('Platoon w/ Cut-ins, 23m IVD')
 set(gca(),'fontsize',10)
-% nexttile
-% appLayout(1-mu, bnd, 1-[0.881 0.925],true);
-% title('Effect of Cut-ins')
-% set(gca(),'fontsize',10)
+nexttile
+appLayout(mu2-mu1, bnd, 1-[0.881 0.925],true);
+title('Effect of Cut-ins')
+set(gca(),'fontsize',10)
 xlabel("Calculation Method No.")
-% ylabel('\DeltaNPC_{inferred}')
-% legend('Mean \DeltaNPC_{inferred}','Published True Value','Estimated Confidence Interval')
+ylabel('\DeltaNPC_{inferred}')
+legend('Mean \DeltaNPC_{inferred}','Published True Value','Estimated Confidence Interval')
 
 % nfc_tbl_aug.mean_engine_power_T_plat/1000
 % nfc_tbl_aug.mean_engine_power_T_ref/1000
@@ -108,7 +109,7 @@ bars=bar(a,[1:18],mu(:),'grouped','LineWidth',1.25)
 true_mean=yline(mean(act_bnd),'LineWidth',1.25)
 truth=patch(a,[-0.5 21 21 -0.5],[act_bnd(1) act_bnd(1) act_bnd(2) act_bnd(2)],'k','facealpha',0.2,'edgecolor','k','linestyle','--')
 xlim(a,[0.2000   18.7])
-ylim(a,[act_bnd(1)-0.05 act_bnd(2)+0.05])
+ylim(a,[act_bnd(1)-0.06 act_bnd(2)+0.06])
 xticks(a,[1:18])
 if leg
     legend(a,[bars,true_mean,truth],'Mean NPC_{inferred}','Published True Value','Published Confidence Interval','Location','eastoutside')

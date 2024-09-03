@@ -15,9 +15,9 @@ end
 % nfc_tbl_aug(nfc_tbl_aug.bsln_plat&nfc_tbl_aug.bsln_ref,:)=[];
 
 rng('default')
-cond = nfc_tbl_aug.mean_P_AD_T_ref<nfc_tbl_aug.mean_P_AD_T_plat;
-flip = (-0.5+(cond))*2;
-% flip = (-0.5+(rand(height(nfc_tbl_aug),1)>=0.5));
+% cond = nfc_tbl_aug.mean_P_AD_T_ref<nfc_tbl_aug.mean_P_AD_T_plat;
+% flip = (-0.5+(cond))*2;
+flip = (-0.5+(rand(height(nfc_tbl_aug),1)>=0.5));
 nfc_tbl_aug.flip = flip;
 
 %% power
@@ -62,6 +62,8 @@ end
 if use_wind
     P_aero_plat = nfc_tbl_aug.mean_P_aero_wind_T_plat;
     P_aero_ref = nfc_tbl_aug.mean_P_aero_wind_T_ref;
+    P_aero_plat(ismissing(P_aero_plat))=nfc_tbl_aug.mean_P_aero_T_plat(ismissing(P_aero_plat));
+    P_aero_ref(ismissing(P_aero_ref))=nfc_tbl_aug.mean_P_aero_T_ref(ismissing(P_aero_ref));
 else
     P_aero_plat = nfc_tbl_aug.mean_P_aero_T_plat;
     P_aero_ref = nfc_tbl_aug.mean_P_aero_T_ref;

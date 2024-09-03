@@ -2,7 +2,7 @@ clearvars
 % combine nfcs
 drr_method = 'schmid';
 pad_adjustment = 'cadj';
-weather = false;
+weather = true;
 eta = 0.322;
 addpath('.\functions\')
 fSet = @(tbl) ones(height(tbl),1);

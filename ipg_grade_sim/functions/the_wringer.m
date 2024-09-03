@@ -31,7 +31,8 @@ for q = 1:length(subtbl_array)
                     fNPC_inf(subtbl_array{q},P_AD_inf{q}(2),P_aero_inf{q}), ...
                     fNPC_inf(subtbl_array{q},P_AD_inf{q}(3),P_aero_inf{q})];
 end
+P_KE = 0.5*(subtbl_array{end}.v(end)^2-subtbl_array{end}.v(1)^2)*(subtbl_array{end}.ego_m(1)+15000)/range(subtbl_array{end}.time);
 P_AD_true = mean(subtbl_array{end}.PwrL_Brake);
 P_aero_true = mean(subtbl_array{end}.PwrL_Aero./subtbl_array{end}.drag_reduction_ratio);
-NPC_true = mean(subtbl_array{end}.engine_power)/nn_C.predict([mean(subtbl_array{end}.v),subtbl_array{end}.ego_m(1)+15000]);
+NPC_true = mean(subtbl_array{end}.engine_power)/(nn_C.predict([mean(subtbl_array{end}.v),subtbl_array{end}.ego_m(1)+15000])+P_KE);
 end

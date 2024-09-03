@@ -10,7 +10,7 @@ for q=0.001:0.01:0.3
     [L(i),U(i)]=twoSidedMaybe(rocmetrics(y_true_train,[1-y_hat_score_train_lr],[0]).Metrics, ...
     rocmetrics(y_true_train,[y_hat_score_train_lr],[1]).Metrics, ...
     q)
-    [Lt(i),Ut(i)]=twoSidedMaybe(rocmetrics(y_true_test,[1-y_hat_score_test_lr],[0]).Metrics, ...
+    [L(i),U(i)]=twoSidedMaybe(rocmetrics(y_true_test,[1-y_hat_score_test_lr],[0]).Metrics, ...
     rocmetrics(y_true_test,[y_hat_score_test_lr],[1]).Metrics, ...
     q)
     i=i+1
@@ -18,7 +18,8 @@ for q=0.001:0.01:0.3
 end
 Ut(Ut<.50)=.5;
 Lt(Lt>0.5)=.5;
-clf
+% clf
+yyaxis left
 hold on
 colormap gray
 xtickformat('percentage')
@@ -36,7 +37,7 @@ no = patch((1-[p,flip(p)])*100,[L,zeros(size(L))]*100,validatecolor("#ff4c42"),'
 set(gca(),'XDir','reverse','TickDir','none')
 xlabel('Confidence Level')
 ylabel('Estimated Probability')
-xlim([71 99.9])
+xlim([74 99.9])
 
 % plot((1-[p])*100,[Lt;(Ut)]'*100,'-k');
 % grid on
@@ -44,11 +45,12 @@ xlim([71 99.9])
 
 yyaxis right
 % tvec = unique([flip(0.55+logspace(log10(0.05),log10(0.55),7)*-1),0.45+logspace(log10(0.05),log10(0.55),7)])
-tvec = flip([0.9,0.95:0.025:1.05,1.1])
-yticks(logreg.predict(tvec'))
+tvec = flip(([0.95,0.97:0.01:1.03,1.05]));
+tvect = (tvec');
+yticks(logreg.predict([(tvect)]));
 ylim([0, 1])
-yline(logreg.predict(tvec'),'--').set('Alpha',0.5)
-yticklabels(sprintf('%.3f\n',tvec))
+yline(logreg.predict([tvect]),'--').set('Alpha',0.5)
+yticklabels(sprintf('%.2f\n',tvec))
 set(gca(),'YColor','k')
 ylabel('NFC_{inferred}')
 a=annotation('textbox',[0.53,0.73,0.2,0.2],'String','Platoon','BackgroundColor',validatecolor("#168ef0"))

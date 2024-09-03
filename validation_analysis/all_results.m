@@ -1,7 +1,7 @@
 clearvars;close all
 drr_method = {'schmid','husseinrp','husseinpwr'};
 pad_adjustment = {'none','rls','cadj'};
-weather = {false};
+weather = {false,true};
 eta = 0.322;
 robust = 'on';
 fSet = @(tbl) ones(height(tbl),1);
@@ -10,8 +10,8 @@ addpath('.\functions\')
 
 for q=1:3
     for qq = 1:3
-        for qqq = 1
-
+        for qqq = 1:2
+            
             % load and merge tables
             table_1 = process_nfc_tbl(load("./lookups/nfc_tbl_aug_doe.mat",'nfc_tbl_aug').nfc_tbl_aug, drr_method{q}, pad_adjustment{qq}, weather{qqq},eta);
             table_2 = process_nfc_tbl(load("./lookups/nfc_tbl_aug_canada.mat",'nfc_tbl_aug').nfc_tbl_aug, drr_method{q}, pad_adjustment{qq}, weather{qqq},eta);
